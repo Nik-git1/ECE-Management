@@ -1,0 +1,30 @@
+[
+    {
+      "borrowId": 1,
+      "equipmentId": 1,
+      "equipmentName": "Laptop",
+      "userId": 101,
+      "userName": "John Doe",
+      "requestedTime": "2023-10-15T10:00:00Z",
+      "durationInDays": 7
+    },
+    {
+      "borrowId": 2,
+      "equipmentId": 3,
+      "equipmentName": "Microscope",
+      "userId": 102,
+      "userName": "Jane Smith",
+      "requestedTime": "2023-10-16T14:30:00Z",
+      "durationInDays": 5
+    },
+    {
+      "borrowId": 3,
+      "equipmentId": 2,
+      "equipmentName": "Projector",
+      "userId": 103,
+      "userName": "Bob Johnson",
+      "requestedTime": "2023-10-17T09:15:00Z",
+      "durationInDays": 3
+    }
+  ]
+  

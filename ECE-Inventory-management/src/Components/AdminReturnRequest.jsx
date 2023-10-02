@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import RequestTable from "./RequestTable";
 
 const AdminReturnRequest = () => {
   return (
-    <div>AdminReturnRequest</div>
-  )
-}
+    <div>
+      <div>AdminReturnRequest</div>
+      <RequestTable name="return" />
+    </div>
+  );
+};
 
-export default AdminReturnRequest
+export default AdminReturnRequest;

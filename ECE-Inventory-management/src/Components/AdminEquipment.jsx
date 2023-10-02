@@ -7,7 +7,7 @@ import { PiCheckBold } from 'react-icons/pi';
 import Swal from 'sweetalert2';
 
 const EquipmentTable = () => {
-  // Access the equipment data from the context
+ 
   const { equipmentData, setEquipmentData } = useContext(EquipmentContext);
   const [editingRow, setEditingRow] = useState(-1);
 
@@ -16,8 +16,7 @@ const EquipmentTable = () => {
   };
 
   const handleSave = (rowIndex) => {
-    // Implement your save logic here
-    // For demo purposes, we'll directly update the equipment data
+    
     const updatedEquipment = [...equipmentData];
     updatedEquipment[rowIndex] = { ...equipmentData[rowIndex] }; // Clone the original data
     setEquipmentData(updatedEquipment);

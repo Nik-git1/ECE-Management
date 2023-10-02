@@ -1,9 +1,13 @@
-import React from 'react'
+import React from 'react';
+import RequestTable from './RequestTable'; // Import the EquipmentTable component
 
-const AdminAllotedEquiments = () => {
+const AdminBorrowRequest = () => {
   return (
-    <div>AdminAllotedEquiments</div>
-  )
-}
+    <div>
+      <h2>AdminAllotedEquiments</h2>
+      <RequestTable name="allocate" />
+    </div>
+  );
+};
 
-export default AdminAllotedEquiments
+export default AdminBorrowRequest;

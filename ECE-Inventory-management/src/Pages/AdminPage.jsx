@@ -20,7 +20,7 @@ const AdminPage = () => {
             <Route element={<EquipmentTable />} path="/" />
             <Route element={<AdminAllotedEquiments />} path="/admin/alloted" />
             <Route element={<AdminBorrowRequest />} path="/admin/brequest" />
-            <Route element={<AdminReturnReqest />} path="/rrequest" />
+            <Route element={<AdminReturnReqest />} path="/admin/rrequest" />
           </Routes>
         </div>
       </div>

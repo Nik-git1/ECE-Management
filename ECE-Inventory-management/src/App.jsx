@@ -1,12 +1,15 @@
-import React from 'react';
-import  EquipmentState  from './Context/EquipmentState'; // Adjust the import path as needed
-import EquipmentTable from './Components/AdminEquipment'; // Import your EquipmentTable component
-import AdminPage from './Pages/AdminPage';
+import React from "react";
+import EquipmentState from "./Context/EquipmentState"; // Adjust the import path as needed
+import EquipmentTable from "./Components/AdminEquipment"; // Import your EquipmentTable component
+import AdminPage from "./Pages/AdminPage";
+import RequestState from "./Context/RequestState";
 const App = () => {
   return (
-    <EquipmentState> 
+    <RequestState>
+      <EquipmentState>
         <AdminPage />
-    </EquipmentState>
+      </EquipmentState>
+    </RequestState>
   );
 };
 
