@@ -1,0 +1,27 @@
+[
+    {
+      "allotmentId": 1,
+      "equipmentId": 1,
+      "equipmentName": "Laptop",
+      "userName": "John Doe",
+      "allottedTime": "2023-10-14T15:45:00Z",
+      "daysLeft": 2
+    },
+    {
+      "allotmentId": 2,
+      "equipmentId": 4,
+      "equipmentName": "Bicycle",
+      "userName": "Alice Green",
+      "allottedTime": "2023-10-16T09:00:00Z",
+      "daysLeft": 1
+    },
+    {
+      "allotmentId": 3,
+      "equipmentId": 3,
+      "equipmentName": "Microscope",
+      "userName": "Jane Smith",
+      "allottedTime": "2023-10-18T14:15:00Z",
+      "daysLeft": 4
+    }
+  ]
+  
