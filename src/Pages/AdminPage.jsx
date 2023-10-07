@@ -9,7 +9,7 @@ import SideBar from '../Components/AdminSidebar.jsx';
 
 const AdminPage = () => {
   return (
-    <div className="fixed w-full">
+    <div>
       <AdminNavbar />
       <div className="flex">
         <div className="w-1/6 min-w-[300px]">
