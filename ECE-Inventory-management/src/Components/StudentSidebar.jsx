@@ -13,13 +13,8 @@ const SideBar = () => {
           Alloted Equiments
         </Link>
         <hr className='border-t-2' />
-        
         <Link to="/admin/brequest" className='bg-[#3dafaa] p-2 h-16 hover:bg-[rgb(50,140,135)] focus:bg-[rgb(50,140,135)] text-white font-bold'>
-          Borrow Request
-        </Link>
-        <hr className='border-t-2' />
-        <Link to="/admin/rrequest" className='bg-[#3dafaa] p-2 h-16 hover:bg-[rgb(50,140,135)] focus:bg-[rgb(50,140,135)] text-white font-bold'>
-          Return Request
+            Requested Equipments
         </Link>
         <hr className='border-t-2' />
       </div>

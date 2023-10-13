@@ -5,7 +5,7 @@ import EquipmentTable from '../Components/AdminEquipment.jsx';
 import AdminAllotedEquiments from '../Components/AdminAllotedEquiments.jsx';
 import AdminBorrowRequest from '../Components/AdminBorrowRequest.jsx'
 import AdminReturnReqest from '../Components/AdminReturnRequest.jsx'
-import SideBar from '../Components/AdminSidebar.jsx';
+import SideBar from '../Components/StudentSidebar.jsx';
 
 const AdminPage = () => {
   return (
