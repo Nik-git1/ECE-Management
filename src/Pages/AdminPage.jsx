@@ -6,9 +6,13 @@ import AdminAllotedEquiments from '../Components/AdminAllotedEquiments.jsx';
 import AdminBorrowRequest from '../Components/AdminBorrowRequest.jsx'
 import AdminReturnReqest from '../Components/AdminReturnRequest.jsx'
 import SideBar from '../Components/AdminSidebar.jsx';
+import Login from '../Components/Login.jsx'
 
 const AdminPage = () => {
   return (
+    // <div>
+    //   <Login />
+    // </div>
     <div>
       <AdminNavbar />
       <div className="flex">
@@ -18,6 +22,7 @@ const AdminPage = () => {
         <div className="flex-1">
           <Routes>
             <Route element={<EquipmentTable />} path="/" />
+            <Route element={<Login />} path="/login" />
             <Route element={<AdminAllotedEquiments />} path="/admin/alloted" />
             <Route element={<AdminBorrowRequest />} path="/admin/brequest" />
             <Route element={<AdminReturnReqest />} path="/admin/rrequest" />

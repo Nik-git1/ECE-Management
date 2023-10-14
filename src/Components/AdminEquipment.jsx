@@ -16,7 +16,11 @@ const EquipmentTable = () => {
   };
 
   const handleSave = (rowIndex) => {
-    
+    Swal.fire(
+      'Updated!',
+      'Your data has been updated successfully.',
+      'success'
+    )
     const updatedEquipment = [...equipmentData];
     updatedEquipment[rowIndex] = { ...equipmentData[rowIndex] }; // Clone the original data
     setEquipmentData(updatedEquipment);
@@ -49,7 +53,7 @@ const EquipmentTable = () => {
         handleDelete(rowIndex);
         Swal.fire(
           'Deleted!',
-          'Your file has been deleted.',
+          'Your data has been deleted.',
           'success'
         )
       }
