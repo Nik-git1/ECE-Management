@@ -57,7 +57,7 @@ const RequestTable = (props) => {
           </td>
         ))}
         <td className='border p-2'>
-          <div className='flex'>
+          <div className='flex justify-center'>
            <button className={actionButton.color}
             onClick={actionButton.action}>
             {actionButton.label}

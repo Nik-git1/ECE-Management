@@ -85,7 +85,7 @@ const EquipmentTable = () => {
         ))}
         <td className='border p-2'>
           {isEditing ? (
-            <div className='flex'>
+            <div className='flex justify-center'>
               <button
                 className='bg-green-500 text-white px-2 py-1 rounded-md flex items-center mr-1'
                 onClick={() => handleSave(index)}
@@ -100,7 +100,7 @@ const EquipmentTable = () => {
               </button>
             </div>
           ) : (
-            <div className='flex'>
+            <div className='flex justify-center'>
               <button
                 className='bg-blue-500 text-white px-2 py-1 rounded-md flex items-center mr-1'
                 onClick={() => handleEdit(index)}
