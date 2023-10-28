@@ -9,7 +9,7 @@ import SideBar from '../Components/AdminSidebar.jsx';
 
 const AdminPage = () => {
   return (
-    <div>
+    <div className="fixed w-full">
       <AdminNavbar />
       <div className="flex">
         <div className="w-1/6 min-w-[300px]">
@@ -17,10 +17,10 @@ const AdminPage = () => {
         </div>
         <div className="flex-1">
           <Routes>
-            <Route element={<EquipmentTable />} path="/" />
-            <Route element={<AdminAllotedEquiments />} path="/admin/alloted" />
-            <Route element={<AdminBorrowRequest />} path="/admin/brequest" />
-            <Route element={<AdminReturnReqest />} path="/admin/rrequest" />
+            <Route element={<EquipmentTable />} path="/equipment" />
+            <Route element={<AdminAllotedEquiments />} path="/alloted" />
+            <Route element={<AdminBorrowRequest />} path="/brequest" />
+            <Route element={<AdminReturnReqest />} path="/rrequest" />
           </Routes>
         </div>
       </div>

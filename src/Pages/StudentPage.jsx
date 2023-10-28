@@ -3,7 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import AdminNavbar from '../Components/AdminNavbar.jsx';
 import StudentSideBar from '../Components/StudentSideBar.jsx';
 import StudentEquipment from '../Components/StudentEquipment.jsx';
-
+import StudentDashBoard from '../Components/StudentDashBoard.jsx';
+import StudentBorrowRequest from '../Components/StudentBorrowRequest.jsx';
 const StudentPage = () => {
     return (
         <div>
@@ -14,7 +15,9 @@ const StudentPage = () => {
           </div>
           <div className="flex-1">
             <Routes>
-              <Route element={<StudentEquipment />} path="/" />
+              <Route element={<StudentDashBoard />} path="/" />
+              <Route element={<StudentEquipment />} path="/equipments" />
+              <Route element={<StudentBorrowRequest />} path="/brequest" />
             </Routes>
           </div>
         </div>
