@@ -5,6 +5,7 @@ import StudentSideBar from '../Components/StudentSideBar.jsx';
 import StudentEquipment from '../Components/StudentEquipment.jsx';
 import StudentDashBoard from '../Components/StudentDashBoard.jsx';
 import StudentBorrowRequest from '../Components/StudentBorrowRequest.jsx';
+import FeedbackForm from '../Components/StudentFeedback.jsx';
 const StudentPage = () => {
     return (
         <div>
@@ -18,6 +19,7 @@ const StudentPage = () => {
               <Route element={<StudentDashBoard />} path="/" />
               <Route element={<StudentEquipment />} path="/equipments" />
               <Route element={<StudentBorrowRequest />} path="/brequest" />
+              <Route element = {<FeedbackForm/>} path='/feedback'/>
             </Routes>
           </div>
         </div>
