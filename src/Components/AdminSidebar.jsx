@@ -5,7 +5,7 @@ const SideBar = () => {
   return (
     <div className='bg-[#3dafaa] h-screen text-center w-[285px] mt-4'>
       <div className='flex flex-col'>
-        <Link to="/" className='bg-[#3dafaa] h-16 p-2 hover:bg-[rgb(50,140,135)] focus:bg-[rgb(50,140,135)] text-white font-bold'>
+        <Link to="/admin/equipment" className='bg-[#3dafaa] h-16 p-2 hover:bg-[rgb(50,140,135)] focus:bg-[rgb(50,140,135)] text-white font-bold'>
           EQUIPMENT LIST
         </Link>
         <hr className='border-t-2' />

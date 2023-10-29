@@ -5,9 +5,21 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { RxCross2 } from 'react-icons/rx';
 import { PiCheckBold } from 'react-icons/pi';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const EquipmentTable = () => {
- 
+  const getData = async () => {
+    try {
+      const response = await axios.get("/api/equipment/");
+      setEquipmentData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, []); 
+
   const { equipmentData, setEquipmentData } = useContext(EquipmentContext);
   const [editingRow, setEditingRow] = useState(-1);
 

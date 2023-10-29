@@ -8,7 +8,7 @@ const AdminNavbar = () => {
         <span className='text-2x1 font-bold text-[#3dafaa] flex'>
           <a href="/"><img className='h-10 inline mr-2' src="/Images/ECE_logo_header_new.png" alt="Fail to load" /></a>
           <div className=''>
-            <a href="/">INVENTORY MANAGEMENT SYSTEM</a>
+            <a href="/admin/equipment">INVENTORY MANAGEMENT SYSTEM</a>
           </div>
         </span>
       </div>
