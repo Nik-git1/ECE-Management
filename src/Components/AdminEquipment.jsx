@@ -119,7 +119,7 @@ const EquipmentTable = () => {
       </tr>
     );
   };
-  const columnNames = ["ID", "Equipment Name", "Type", "Quantity"];
+  const columnNames = ["ID", "Equipment Name", "Type", "Quantity","Lab"];
 
   const renderHeaderRow = () => {
     return (
