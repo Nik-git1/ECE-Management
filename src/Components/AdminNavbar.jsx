@@ -1,14 +1,25 @@
-import React from 'react';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const AdminNavbar = () => {
+  // const location = useLocation();
+  // const isStudent = location.pathname === '/student';
+
+  // const [navBarURL, setNAvBarURL] = useState('/admin/equipment');
+  // if(isStudent){
+  //   setNAvBarURL('/student')
+  // }
+  // else{
+  //   setNAvBarURL('/admin/equipment')
+  // }
   return (
     <nav className="bg-white p-5 shadow md:flex md:items-center md:justify-between">
       
       <div>
         <span className='text-2x1 font-bold text-[#3dafaa] flex'>
-          <a href="/"><img className='h-10 inline mr-2' src="/Images/ECE_logo_header_new.png" alt="Fail to load" /></a>
+          <a href="/admin/equipment"><img className='h-10 inline mr-2' src="/Images/ECE_logo_header_new.png" alt="Fail to load" /></a>
           <div className=''>
-            <a href="/">INVENTORY MANAGEMENT SYSTEM</a>
+            <a href="/admin/equipment">INVENTORY MANAGEMENT SYSTEM</a>
           </div>
         </span>
       </div>
