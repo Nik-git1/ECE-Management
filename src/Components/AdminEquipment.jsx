@@ -56,10 +56,12 @@ const EquipmentTable = () => {
     setEditingRow(-1);
   };
 
-  const handleDelete = (rowIndex) => {
-    const updatedEquipment = [...equipmentData];
-    updatedEquipment.splice(rowIndex, 1);
-    setEquipmentData(updatedEquipment);
+  const handleDelete = async (rowIndex) => {
+    const selectedEquipment = equipmentData[rowIndex];
+    const response = await fetch(`http://localhost:3000/api/equipment/equipments/${selectedEquipment._id}`, {
+        method: 'DELETE'
+      });
+      fetchEquipmentData();
   };
 
   const deleteAlert = (rowIndex) => {
