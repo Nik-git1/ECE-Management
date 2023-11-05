@@ -1,14 +1,13 @@
-import React, { useContext, useState } from 'react';
-import EquipmentContext from '../Context/EquipmentContext';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
 const StudentEquipment = () => {
-  const { equipmentData } = useContext(EquipmentContext);
+  const [equipmentData, setEquipmentData] = useState();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [requestedQuantity, setRequestedQuantity] = useState(1);
   const [requestedDays, setRequestedDays] = useState(1);
-  const [request, setRequest] = useState(null); // State to store the request
-  const [selectedLab, setSelectedLab] = useState('Lab 1'); // Default selected lab
+  const [request, setRequest] = useState(null);
+  const [selectedLab, setSelectedLab] = useState('Lab 1');
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -19,7 +18,6 @@ const StudentEquipment = () => {
   };
 
   const sendRequest = () => {
-    // Create the request object
     const selectedEquipment = equipmentData.find(
       (equipment) => equipment.id === request.id
     );
@@ -29,22 +27,33 @@ const StudentEquipment = () => {
       days: requestedDays,
       quantity: requestedQuantity,
     };
-
-    // Log the request
     console.log('Request:', requestObj);
-
-    // Set the request state
     setRequest(requestObj);
     closeModal();
   };
 
+  useEffect(() => {
+    fetchEquipmentData();
+  }, []);
+
+  const fetchEquipmentData = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/equipment/equipments');
+      const data = await response.json();
+      setEquipmentData(data);
+      console.log(data)
+    } catch (error) {
+      console.error('Error fetching equipment data: ', error);
+    }
+  };
+
   const renderRow = (equipment, index) => {
-    if (equipment.labName === selectedLab) {
+    // if (equipment.labName === selectedLab) {
       return (
-        <tr className='text-center' key={index}>
-          <td className='border p-2'>{equipment.id}</td>
-          <td className='border p-2'>{equipment.equipmentName}</td>
-          <td className='border p-2'>{equipment.type}</td>
+        <tr className='text-center' key={equipment._id}>
+          <td className='border p-2'>{equipment._id}</td>
+          <td className='border p-2'>{equipment.name}</td>
+          <td className='border p-2'>None</td>
           <td className='border p-2'>{equipment.quantity}</td>
           <td className='border p-2'>
             <div className='flex items-center justify-center'>
@@ -52,7 +61,7 @@ const StudentEquipment = () => {
                 className='bg-green-500 text-white px-2 py-1 rounded-md flex items-center mr-1'
                 onClick={() => {
                   openModal();
-                  setRequest({ id: equipment.id });
+                  setRequest({ id: equipment._id });
                 }}
               >
                 Request
@@ -61,7 +70,7 @@ const StudentEquipment = () => {
           </td>
         </tr>
       );
-    }
+    // }
     return null;
   };
 
@@ -117,7 +126,8 @@ const StudentEquipment = () => {
       <table className='w-full border-collapse border'>
         <thead className='sticky top-0'>{renderHeaderRow()}</thead>
         <tbody>
-          {equipmentData.map((equipment, index) => renderRow(equipment, index))}
+          {equipmentData &&
+            equipmentData.map((equipment, index) => renderRow(equipment, index))}
         </tbody>
       </table>
 

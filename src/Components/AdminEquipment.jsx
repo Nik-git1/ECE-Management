@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import EquipmentContext from '../Context/EquipmentContext'; // Import the EquipmentContext
+import React, { useEffect, useState } from 'react';
 import { BiSolidEditAlt } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { RxCross2 } from 'react-icons/rx';
@@ -7,24 +6,50 @@ import { PiCheckBold } from 'react-icons/pi';
 import Swal from 'sweetalert2';
 
 const EquipmentTable = () => {
- 
-  const { equipmentData, setEquipmentData } = useContext(EquipmentContext);
+  const [equipmentData, setEquipmentData] = useState([]); // Set initial state as an empty array
   const [editingRow, setEditingRow] = useState(-1);
+
+  useEffect(() => {
+    fetchEquipmentData();
+  }, []);
+
+  const fetchEquipmentData = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/equipment/equipments');
+      const data = await response.json();
+      setEquipmentData(data);
+    } catch (error) {
+      console.error('Error fetching equipment data: ', error);
+    }
+  };
 
   const handleEdit = (rowIndex) => {
     setEditingRow(rowIndex);
   };
 
-  const handleSave = (rowIndex) => {
-    Swal.fire(
-      'Updated!',
-      'Your data has been updated successfully.',
-      'success'
-    )
-    const updatedEquipment = [...equipmentData];
-    updatedEquipment[rowIndex] = { ...equipmentData[rowIndex] }; // Clone the original data
-    setEquipmentData(updatedEquipment);
-    setEditingRow(-1); // Reset editing state
+  const handleSave = async (rowIndex) => {
+    try {
+      const selectedEquipment = equipmentData[rowIndex];
+      const response = await fetch(`http://localhost:3000/api/equipment/equipments/${selectedEquipment._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selectedEquipment),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        Swal.fire('Updated!', data.message, 'success');
+      } else {
+        Swal.fire('Error!', data.error, 'error');
+      }
+
+      fetchEquipmentData();
+      setEditingRow(-1);
+    } catch (error) {
+      console.error('Error updating equipment data: ', error);
+    }
   };
 
   const handleCancel = () => {
@@ -32,8 +57,6 @@ const EquipmentTable = () => {
   };
 
   const handleDelete = (rowIndex) => {
-    // Implement your delete logic here
-    // For demo purposes, we'll directly update the equipment data
     const updatedEquipment = [...equipmentData];
     updatedEquipment.splice(rowIndex, 1);
     setEquipmentData(updatedEquipment);
@@ -47,42 +70,56 @@ const EquipmentTable = () => {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
         handleDelete(rowIndex);
-        Swal.fire(
-          'Deleted!',
-          'Your data has been deleted.',
-          'success'
-        )
+        Swal.fire('Deleted!', 'Your data has been deleted.', 'success');
       }
-    })
-  }
+    });
+  };
 
   const renderRow = (equipment, index) => {
     const isEditing = index === editingRow;
-    const editingRowClass = 'bg-gray-300'; // Define the CSS class for the editing row background color
-  
+    const editingRowClass = 'bg-gray-300';
+
+    const handleFieldChange = (e, field) => {
+      const updatedEquipmentData = [...equipmentData];
+      updatedEquipmentData[index][field] = e.target.value;
+      setEquipmentData(updatedEquipmentData);
+    };
+
     return (
-      <tr className={`text-center ${isEditing ? editingRowClass : ''}`} key={index}>
-        {Object.keys(equipment).map((key, ind) => (
-          <td className='border p-2' key={ind}>
-            {isEditing ? (
-              <input
-                type='text'
-                value={equipmentData[index][key]}
-                onChange={(e) => {
-                  const updatedEquipment = [...equipmentData];
-                  updatedEquipment[index][key] = e.target.value;
-                  setEquipmentData(updatedEquipment);
-                }}
-              />
-            ) : (
-              equipmentData[index][key]
-            )}
-          </td>
-        ))}
+      <tr className={`text-center ${isEditing ? editingRowClass : ''}`} key={equipment._id}>
+        <td className='border p-2'>{equipment._id}</td>
+        <td className='border p-2'>
+          {isEditing ? (
+            <input value={equipment.name} onChange={(e) => handleFieldChange(e, 'name')} />
+          ) : (
+            equipment.name
+          )}
+        </td>
+        <td className='border p-2'>
+          {isEditing ? (
+            <input value={equipment.lab} onChange={(e) => handleFieldChange(e, 'lab')} />
+          ) : (
+            equipment.lab
+          )}
+        </td>
+        <td className='border p-2'>
+          {isEditing ? (
+            <input value={equipment.description} onChange={(e) => handleFieldChange(e, 'description')} />
+          ) : (
+            equipment.description
+          )}
+        </td>
+        <td className='border p-2'>
+          {isEditing ? (
+            <input value={equipment.quantity} onChange={(e) => handleFieldChange(e, 'quantity')} />
+          ) : (
+            equipment.quantity
+          )}
+        </td>
         <td className='border p-2'>
           {isEditing ? (
             <div className='flex justify-center'>
@@ -119,13 +156,16 @@ const EquipmentTable = () => {
       </tr>
     );
   };
-  const columnNames = ["ID", "Equipment Name", "Type", "Quantity","Lab"];
+
+  const columnNames = ['ID', 'Equipment Name', 'Lab', 'Description', 'Quantity'];
 
   const renderHeaderRow = () => {
     return (
-      <tr className="bg-[#3dafaa] text-white">
+      <tr className='bg-[#3dafaa] text-white'>
         {columnNames.map((columnName, index) => (
-          <th className='border p-2 text-center' key={index}>{columnName}</th>
+          <th className='border p-2 text-center' key={index}>
+            {columnName}
+          </th>
         ))}
         <th className='border p-2 text-center'>Action</th>
       </tr>
@@ -134,14 +174,11 @@ const EquipmentTable = () => {
 
   return (
     <div className='overflow-auto max-w-[83vw] max-h-[1000px] mt-4'>
-      <table className="w-full border-collapse border">
-        <thead className='sticky top-0'>
-          {renderHeaderRow()}
-        </thead>
+      <table className='w-full border-collapse border'>
+        <thead className='sticky top-0'>{renderHeaderRow()}</thead>
         <tbody>
-          {equipmentData.map((equipment, index) => (
-            renderRow(equipment, index)
-          ))}
+          {equipmentData &&
+            equipmentData.map((equipment, index) => renderRow(equipment, index))}
         </tbody>
       </table>
     </div>
