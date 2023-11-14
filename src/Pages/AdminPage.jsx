@@ -1,11 +1,11 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import AdminNavbar from '../Components/AdminNavbar.jsx';
-import EquipmentTable from '../Components/AdminEquipment.jsx';
-import AdminAllotedEquiments from '../Components/AdminAllotedEquiments.jsx';
-import AdminBorrowRequest from '../Components/AdminBorrowRequest.jsx'
-import AdminReturnReqest from '../Components/AdminReturnRequest.jsx'
-import SideBar from '../Components/AdminSidebar.jsx';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import AdminNavbar from "../Components/AdminNavbar.jsx";
+import EquipmentTable from "../Components/AdminEquipment.jsx";
+import AdminAllotedEquiments from "../Components/AdminAllotedEquiments.jsx";
+import AdminBorrowRequest from "../Components/AdminBorrowRequest.jsx";
+import AdminReturnReqest from "../Components/AdminReturnRequest.jsx";
+import SideBar from "../Components/AdminSidebar.jsx";
 
 const AdminPage = () => {
   return (
@@ -17,7 +17,7 @@ const AdminPage = () => {
         </div>
         <div className="flex-1">
           <Routes>
-            <Route element={<EquipmentTable />} path="/equipment" />
+            <Route element={<EquipmentTable title="hi" />} path="/equipment" />
             <Route element={<AdminAllotedEquiments />} path="/alloted" />
             <Route element={<AdminBorrowRequest />} path="/brequest" />
             <Route element={<AdminReturnReqest />} path="/rrequest" />
