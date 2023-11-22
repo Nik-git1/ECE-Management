@@ -17,20 +17,37 @@ const StudentEquipment = () => {
     setModalIsOpen(false);
   };
 
-  const sendRequest = () => {
-    const selectedEquipment = equipmentData.find(
-      (equipment) => equipment.id === request.id
-    );
-    const requestObj = {
-      id: request.id,
-      equipmentName: selectedEquipment.equipmentName,
-      days: requestedDays,
-      quantity: requestedQuantity,
-    };
-    console.log('Request:', requestObj);
-    setRequest(requestObj);
-    closeModal();
+  const sendRequest = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/transaction/requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          studentId: '655dc58d8f6f0f87ed8b59cd', // Replace with the actual studentId
+          equipmentId: request.id,
+          quantity: requestedQuantity,
+          daysToUse: requestedDays,
+          lab: selectedLab,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.error);
+        throw new Error(errorData.error);
+      }
+  
+      // Handle success, you can update the UI or take other actions if needed
+      console.log('Request sent successfully');
+      closeModal();
+    } catch (error) {
+      console.error('Error sending request:', error.message);
+      // Handle the error, show a notification, or take other actions as needed
+    }
   };
+
 
   useEffect(() => {
     fetchEquipmentData();

@@ -13,6 +13,7 @@ app.use(cors({
 }));
 
 app.use('/api/equipment/', require('./routes/equipment'));
+app.use('/api/transaction/', require('./routes/transaction'));
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

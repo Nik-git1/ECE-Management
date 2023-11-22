@@ -95,6 +95,19 @@ const declineRequest = async (req, res) => {
   }
 };
 
+// Fetch all requests
+const getAllRequests = async (req, res) => {
+  try {
+    const requests = await Transaction.find();
+    console.log(requests);
+    const student = await Student.findById(requests.student);
+    const equipment = await Equipment.findById(requests.equipment);
+    res.status(200).json({ requests, student, equipment });
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching requests' });
+  }
+};
+
 // Confirm a transaction (Admin)
 const confirmTransaction = async (req, res) => {
   try {
@@ -123,4 +136,4 @@ const confirmTransaction = async (req, res) => {
   }
 };
 
-module.exports = { createRequest, acceptRequest, declineRequest, confirmTransaction };
+module.exports = { createRequest, acceptRequest, declineRequest, confirmTransaction, getAllRequests };

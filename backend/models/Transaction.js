@@ -38,6 +38,7 @@ const transactionSchema = new mongoose.Schema({
   // You can add additional fields if needed, such as admin comments or transaction-specific details.
   adminComments: {
     type: String,
+    default: 'NA'
   },
 });
 
