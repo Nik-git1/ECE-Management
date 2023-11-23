@@ -47,9 +47,8 @@ const createRequest = async (req, res) => {
 // Accept a request (Admin)
 const acceptRequest = async (req, res) => {
   try {
-    const { requestId } = req.params;
-
-    const request = await Transaction.findById(requestId);
+    const { transactionId } = req.params;
+    const request = await Transaction.findById(transactionId);
     if (!request) {
       return res.status(400).json({ error: 'Request not found' });
     }
@@ -59,14 +58,14 @@ const acceptRequest = async (req, res) => {
       return res.status(400).json({ error: 'Invalid request status' });
     }
 
-    request.status = 'active';
+    request.status = 'accepted';
 
     const equipment = await Equipment.findById(request.equipment);
     equipment.quantity -= request.quantity;
 
     await Promise.all([request.save(), equipment.save()]);
 
-    res.json(request);
+    res.status(200).json(request);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred while accepting the request' });
   }
@@ -75,9 +74,9 @@ const acceptRequest = async (req, res) => {
 // Decline a request (Admin)
 const declineRequest = async (req, res) => {
   try {
-    const { requestId } = req.params;
+    const { transactionId } = req.params;
 
-    const request = await Transaction.findById(requestId);
+    const request = await Transaction.findById(transactionId);
     if (!request) {
       return res.status(400).json({ error: 'Request not found' });
     }
@@ -98,15 +97,46 @@ const declineRequest = async (req, res) => {
 // Fetch all requests
 const getAllRequests = async (req, res) => {
   try {
-    const requests = await Transaction.find();
-    console.log(requests);
-    const student = await Student.findById(requests.student);
-    const equipment = await Equipment.findById(requests.equipment);
-    res.status(200).json({ requests, student, equipment });
+    const Rrequests = await Transaction.find({ status: 'requested' });
+    
+    // Assuming that each request has a reference to student and equipment by _id
+    const studentIds = Rrequests.map(request => request.student);
+    const equipmentIds = Rrequests.map(request => request.equipment);
+
+    const students = await Student.find({ _id: { $in: studentIds } });
+    const equipments = await Equipment.find({ _id: { $in: equipmentIds } });
+
+    res.status(200).json({ Rrequests, students, equipments });
   } catch (error) {
+    console.error('Error fetching requests:', error);
     res.status(500).json({ error: 'An error occurred while fetching requests' });
   }
 };
+
+// Fetch requests by student id
+const getRequestByStudentIDs = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const request = await Transaction.find({ student: studentId });
+
+    const equipmentIds = request.map(request => request.equipment);
+
+    // Fetch all equipments based on the array of equipment IDs
+    const equipments = [];
+    for (const equipmentId of equipmentIds) {
+      const equipment = await Equipment.findById(equipmentId);
+      if (equipment) {
+        equipments.push(equipment);
+      }
+    }
+
+    res.status(200).json({ request, equipments });
+  } catch (error) {
+    console.error('Error fetching requests:', error);
+    res.status(500).json({ error: 'An error occurred while fetching requests' });
+  }
+};
+  
 
 // Confirm a transaction (Admin)
 const confirmTransaction = async (req, res) => {
@@ -136,4 +166,4 @@ const confirmTransaction = async (req, res) => {
   }
 };
 
-module.exports = { createRequest, acceptRequest, declineRequest, confirmTransaction, getAllRequests };
+module.exports = { createRequest, acceptRequest, declineRequest, confirmTransaction, getAllRequests, getRequestByStudentIDs };

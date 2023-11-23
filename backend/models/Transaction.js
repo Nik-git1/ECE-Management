@@ -31,7 +31,7 @@ const transactionSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['requested', 'declined', 'active', 'ended'],
+    enum: ['requested', 'declined', 'accepted'],
     default: 'requested', // Default to 'requested'
     required: true,
   },
