@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 
 const StudentDashBoard = () => {
   const [tableData, setTableData] = useState([]);
+  const [returnedTable, setReturnedTable] = useState([]);
 
   useEffect(() => {
-    fetchRequestData();
+    fetchRequestData();returnedData();
   }, []);
 
   const fetchRequestData = async () => {
@@ -76,6 +77,47 @@ const StudentDashBoard = () => {
     }
   };
 
+  const returnedData = async() => {
+    const studentId = "655dc58d8f6f0f87ed8b59cd";
+    const statuses = ["completed"]; // Use an array for multiple statuses
+    const statusQueryParam = statuses.join(",");
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/transaction/srequests/${studentId}?status=${statusQueryParam}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await response.json();
+
+      // Ensure that data.requests and data.equipments are arrays
+      const requestsArray = Array.isArray(data.requests) ? data.requests : [];
+      const equipmentsArray = Array.isArray(data.equipments)
+        ? data.equipments
+        : [];
+
+      const requestDataArray = requestsArray.map((request, index) => {
+        return {
+          request: requestsArray[index] || {},
+          equipment: equipmentsArray[index] || {},
+        };
+      });
+
+      // Check if requestDataArray is not empty before updating the state
+      if (requestDataArray.length > 0) {
+        setReturnedTable(requestDataArray);
+      } else {
+        console.error(
+          "Error fetching requests: Request or equipments array is empty",
+          data
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching requests:", error);
+    }
+  }
+
   const columnNames = [
     "S.No",
     "Equipment Name",
@@ -88,8 +130,8 @@ const StudentDashBoard = () => {
     "S.No",
     "Equipment Name",
     "Quantity",
-    "Last date of Return",
-    "Status",
+    "Lab",
+    "Retuned On",
   ];
 
   const renderEquipedRow = (data, index) => {
@@ -121,13 +163,14 @@ const StudentDashBoard = () => {
   };
 
   const renderReturnedRow = (data, index) => {
+    const { equipment, request } = data;
     return (
       <tr className="text-center" key={index}>
         <td className="border p-2">{index + 1}</td>
-        <td className="border p-2">{data.equipmentName}</td>
-        <td className="border p-2">{data.quantity}</td>
-        <td className="border p-2">{data.lastReturnDate}</td>
-        <td className="border p-2">Waiting for Approval</td>
+        <td className="border p-2">{equipment.name}</td>
+        <td className="border p-2">{request.quantity}</td>
+        <td className="border p-2">{request.lab}</td>
+        <td className="border p-2">{request.returnedOn}</td>
       </tr>
     );
   };
@@ -173,7 +216,7 @@ const StudentDashBoard = () => {
       <table className="w-full border-collapse border">
         <thead className="sticky top-0">{renderReturnedHeader()}</thead>
         <tbody>
-          {/* {tableData.map((data, index) => renderReturnedRow(data, index))} */}
+          {returnedTable.map((data, index) => renderReturnedRow(data, index))}
         </tbody>
       </table>
     </div>

@@ -25,7 +25,6 @@ const createRequest = async (req, res) => {
     // Calculate the return date based on the number of days to use
     const returnDate = new Date();
     returnDate.setDate(returnDate.getDate() + daysToUse);
-
     const request = new Transaction({
       student: studentId,
       equipment: equipmentId,
@@ -34,7 +33,7 @@ const createRequest = async (req, res) => {
       lab,
       status: "requested",
     });
-
+    
     await request.save();
 
     res.status(201).json(request);
@@ -221,6 +220,7 @@ const createReturnRequest = async (req, res) => {
     }
 
     transaction.status = "returning";
+    transaction.returnedOn = new Date();
     await transaction.save(); // Use await directly on the save method
 
     res.status(200).json(transaction);

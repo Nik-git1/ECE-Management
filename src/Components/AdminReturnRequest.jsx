@@ -144,7 +144,7 @@ const AdminReturnRequest = () => {
         <td className="border p-2 text-center">{request?.startDate}</td>
         <td className="border p-2 text-center">{request?.quantity}</td>
         <td className="border p-2 text-center">{request?.returnDate}</td>
-        <td className="border p-2 text-center">None</td>
+        <td className="border p-2 text-center">{request?.returnedOn}</td>
         <td className="border p-2">
           <div className="flex justify-between">
             <button

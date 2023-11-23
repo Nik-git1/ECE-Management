@@ -25,6 +25,10 @@ const transactionSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  returnedOn: {
+    type: Date,
+    default: null
+  },
   lab: {
     type: String,
     required: true,
