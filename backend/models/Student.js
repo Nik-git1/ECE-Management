@@ -24,6 +24,10 @@ const studentSchema = new mongoose.Schema({
     type: Date, // Date when the student is enrolled
     default: Date.now, // Set a default value to the current date and time
     required: true,
+  graduation_type: {
+    type: String,
+    enum: ['btech','mtech','phd'],
+    require: true
   },
   contactNumber: {
     type: String,

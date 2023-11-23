@@ -31,13 +31,14 @@ const transactionSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['requested', 'declined', 'active', 'ended'],
+    enum: ['requested', 'declined', 'accepted'],
     default: 'requested', // Default to 'requested'
     required: true,
   },
   // You can add additional fields if needed, such as admin comments or transaction-specific details.
   adminComments: {
     type: String,
+    default: 'NA'
   },
 });
 

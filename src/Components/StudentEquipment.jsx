@@ -7,7 +7,7 @@ const StudentEquipment = () => {
   const [requestedQuantity, setRequestedQuantity] = useState(1);
   const [requestedDays, setRequestedDays] = useState(1);
   const [request, setRequest] = useState(null);
-  const [selectedLab, setSelectedLab] = useState('Lab 1');
+  const [selectedLab, setSelectedLab] = useState('lab1');
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -17,20 +17,37 @@ const StudentEquipment = () => {
     setModalIsOpen(false);
   };
 
-  const sendRequest = () => {
-    const selectedEquipment = equipmentData.find(
-      (equipment) => equipment.id === request.id
-    );
-    const requestObj = {
-      id: request.id,
-      equipmentName: selectedEquipment.equipmentName,
-      days: requestedDays,
-      quantity: requestedQuantity,
-    };
-    console.log('Request:', requestObj);
-    setRequest(requestObj);
-    closeModal();
+  const sendRequest = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/transaction/requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          studentId: '655dc58d8f6f0f87ed8b59cd', // Replace with the actual studentId
+          equipmentId: request.id,
+          quantity: requestedQuantity,
+          daysToUse: requestedDays,
+          lab: selectedLab,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.error);
+        throw new Error(errorData.error);
+      }
+  
+      // Handle success, you can update the UI or take other actions if needed
+      console.log('Request sent successfully');
+      closeModal();
+    } catch (error) {
+      console.error('Error sending request:', error.message);
+      // Handle the error, show a notification, or take other actions as needed
+    }
   };
+
 
   useEffect(() => {
     fetchEquipmentData();
@@ -42,13 +59,14 @@ const StudentEquipment = () => {
       const data = await response.json();
       setEquipmentData(data);
       console.log(data)
+      console.log("hello");
     } catch (error) {
       console.error('Error fetching equipment data: ', error);
     }
   };
 
   const renderRow = (equipment, index) => {
-    // if (equipment.labName === selectedLab) {
+    if (equipment.lab === selectedLab) {
       return (
         <tr className='text-center' key={equipment._id}>
           <td className='border p-2'>{equipment._id}</td>
@@ -70,11 +88,11 @@ const StudentEquipment = () => {
           </td>
         </tr>
       );
-    // }
+    }
     return null;
   };
 
-  const columnNames = ['ID', 'Equipment Name', 'Type', 'Quantity'];
+  const columnNames = ['ID', 'Equipment Name', 'Type', 'Quantity','Action'];
 
   const renderHeaderRow = () => {
     return (
@@ -84,7 +102,6 @@ const StudentEquipment = () => {
             {columnName}
           </th>
         ))}
-        <th className='border p-2 text-center'>Action</th>
       </tr>
     );
   };
@@ -94,31 +111,31 @@ const StudentEquipment = () => {
       <div>
         <button
           className={`${
-            selectedLab === 'Lab 1'
+            selectedLab === 'lab1'
               ? 'bg-blue-500 text-white'
               : 'bg-gray-300 text-gray-600'
           } px-4 py-2 rounded mr-2`}
-          onClick={() => setSelectedLab('Lab 1')}
+          onClick={() => setSelectedLab('lab1')}
         >
           Lab 1
         </button>
         <button
           className={`${
-            selectedLab === 'Lab 2'
+            selectedLab === 'lab2'
               ? 'bg-blue-500 text-white'
               : 'bg-gray-300 text-gray-600'
           } px-4 py-2 rounded mr-2`}
-          onClick={() => setSelectedLab('Lab 2')}
+          onClick={() => setSelectedLab('lab2')}
         >
           Lab 2
         </button>
         <button
           className={`${
-            selectedLab === 'Lab 3'
+            selectedLab === 'lab3'
               ? 'bg-blue-500 text-white'
               : 'bg-gray-300 text-gray-600'
           } px-4 py-2 rounded`}
-          onClick={() => setSelectedLab('Lab 3')}
+          onClick={() => setSelectedLab('lab3')}
         >
           Lab 3
         </button>
