@@ -1,25 +1,34 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { createRequest, acceptRequest, declineRequest, confirmTransaction, getAllRequests, getRequestByStudentIDs } = require('../controllers/transactionController');
+const {
+  createRequest,
+  acceptRequest,
+  declineRequest,
+  confirmTransaction,
+  getAllRequests,
+  getRequestByStudentIDs,
+  createReturnRequest,
+} = require("../controllers/transactionController");
 
 // Create a new equipment request (Student)
-router.post('/requests', createRequest);
+router.post("/requests", createRequest);
 
-// Accept a request (Admin)
-router.put('/accept/:transactionId', acceptRequest);
+// Accept a borrow request (Admin)
+router.put("/accept/:transactionId", acceptRequest);
 
-// Decline a request (Admin)
-router.put('/decline/:transactionId', declineRequest);
+// Decline a borrow request (Admin)
+router.put("/decline/:transactionId", declineRequest);
 
-// Confirm a transaction (Admin)
-router.put('/transactions/confirm/:transactionId', confirmTransaction);
+// Confirm a borrow transaction (Admin)
+router.put("/transactions/confirm/:transactionId", confirmTransaction);
 
-// Fetch all requests (Admin)
-router.get('/requests', getAllRequests);
+// Fetch all borrow requests (Admin)
+router.get("/requests", getAllRequests);
 
-// Fetch requests of a stuent
-router.get('/srequests/:studentId', getRequestByStudentIDs);
-// // Get all requests (Admin)
-// router.get('/requests', getAllRequests);
+// Fetch borrow requests of a student
+router.get("/srequests/:studentId", getRequestByStudentIDs);
+
+// Create a return request (Student)
+router.post("/return", createReturnRequest);
 
 module.exports = router;
