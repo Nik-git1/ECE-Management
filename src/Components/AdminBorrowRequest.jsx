@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
+import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const AdminBorrowRequest = () => {
   const [requests, setRequests] = useState([]);
 
   const columnNames = [
-    'S.No',
-    'Equipment Name',
-    'Student Name',
-    'Roll no.',
-    'Graduation Type',
-    'Request Time',
-    'Quantity',
-    'Requested for',
-    'Action'
+    "S.No",
+    "Equipment Name",
+    "Student Email ID",
+    "Contact",
+    "Graduation Type",
+    "Request Time",
+    "Quantity",
+    "Requested for",
+    "Action",
   ];
 
   useEffect(() => {
@@ -22,7 +22,9 @@ const AdminBorrowRequest = () => {
 
   const fetchRequests = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/transaction/requests');
+      const response = await fetch(
+        "http://localhost:3000/api/transaction/requests"
+      );
       const data = await response.json();
 
       const requestsArray = data.Rrequests || [];
@@ -33,25 +35,25 @@ const AdminBorrowRequest = () => {
         return {
           request: requestsArray[index] || {},
           student: studentsArray[index] || {},
-          equipment: equipmentsArray[index] || {}
+          equipment: equipmentsArray[index] || {},
         };
       });
 
       setRequests(requestDataArray);
     } catch (error) {
-      console.error('Error fetching requests:', error);
+      console.error("Error fetching requests:", error);
     }
   };
 
   const acceptAlert = (requestID) => {
     Swal.fire({
-      title: 'Accept the request?',
+      title: "Accept the request?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Accept',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Accept",
     }).then((result) => {
       if (result.isConfirmed) {
         acceptRequest(requestID);
@@ -60,11 +62,13 @@ const AdminBorrowRequest = () => {
   };
 
   const acceptRequest = async (requestID) => {
-
     try {
-      const response = await fetch(`http://localhost:3000/api/transaction/accept/${requestID}`, {
-        method: 'PUT',
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/transaction/accept/${requestID}`,
+        {
+          method: "PUT",
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -74,15 +78,18 @@ const AdminBorrowRequest = () => {
 
       fetchRequests();
     } catch (error) {
-      console.error('Error accepting request:', error);
+      console.error("Error accepting request:", error);
     }
   };
 
-  const declineRequest = async(requestID) => {
+  const declineRequest = async (requestID) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/transaction/decline/${requestID}`, {
-        method: 'PUT',
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/transaction/decline/${requestID}`,
+        {
+          method: "PUT",
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -92,19 +99,19 @@ const AdminBorrowRequest = () => {
 
       fetchRequests();
     } catch (error) {
-      console.error('Error accepting request:', error);
+      console.error("Error accepting request:", error);
     }
   };
 
   const declineAlert = (requestID) => {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to revert this decline!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Decline The Request',
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Decline The Request",
     }).then((result) => {
       if (result.isConfirmed) {
         declineRequest(requestID);
@@ -114,9 +121,9 @@ const AdminBorrowRequest = () => {
 
   const renderHeader = () => {
     return (
-      <tr className='bg-[#3dafaa] text-white'>
+      <tr className="bg-[#3dafaa] text-white">
         {columnNames.map((columnName, index) => (
-          <th className='border p-2 text-center' key={index}>
+          <th className="border p-2 text-center" key={index}>
             {columnName}
           </th>
         ))}
@@ -129,25 +136,26 @@ const AdminBorrowRequest = () => {
 
     return (
       <tr key={index}>
-        <td className='border p-2 text-center'>{index + 1}</td>
-        <td className='border p-2 text-center'>{equipment?.name}</td>
-        <td className='border p-2 text-center'>{student?.fullName}</td>
-        <td className='border p-2 text-center'>{student?.rollNumber}</td>
-        <td className='border p-2 text-center'>{student?.graduation_type}</td>
-        <td className='border p-2 text-center'>{request?.startDate}</td>
-        <td className='border p-2 text-center'>{request?.quantity}</td>
-        <td className='border p-2 text-center'>{request?.returnDate}</td>
-        <td className='border p-2'>
-          <div className='flex justify-between'>
+        <td className="border p-2 text-center">{index + 1}</td>
+        <td className="border p-2 text-center">{equipment?.name}</td>
+        <td className="border p-2 text-center">{student?.email}</td>
+        <td className="border p-2 text-center">{student?.contactNumber}</td>
+        <td className="border p-2 text-center">{student?.graduation_type}</td>
+        <td className="border p-2 text-center">{request?.startDate}</td>
+        <td className="border p-2 text-center">{request?.quantity}</td>
+        <td className="border p-2 text-center">{request?.returnDate}</td>
+        <td className="border p-2">
+          <div className="flex justify-between">
             <button
-              className='bg-green-500 text-white px-2 py-1 rounded-md items-center'
+              className="bg-green-500 text-white px-2 py-1 rounded-md items-center"
               onClick={() => acceptAlert(request._id)}
             >
               Accept
             </button>
 
-            <button className='bg-red-500 text-white px-2 py-1 rounded-md items-center'
-            onClick={() => declineAlert(request._id)}
+            <button
+              className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
+              onClick={() => declineAlert(request._id)}
             >
               Decline
             </button>
@@ -160,9 +168,11 @@ const AdminBorrowRequest = () => {
   return (
     <div>
       <h2>AdminBorrowRequest</h2>
-      <table className='w-full overflow-auto'>
+      <table className="w-full overflow-auto">
         <thead>{renderHeader()}</thead>
-        <tbody>{requests.map((requestData, index) => renderRow(requestData, index))}</tbody>
+        <tbody>
+          {requests.map((requestData, index) => renderRow(requestData, index))}
+        </tbody>
       </table>
     </div>
   );
