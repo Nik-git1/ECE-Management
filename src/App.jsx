@@ -4,6 +4,7 @@ import EquipmentTable from "./Components/AdminEquipment"; // Import your Equipme
 import AdminPage from "./Pages/AdminPage";
 import StudentPage from "./Pages/StudentPage";
 import RequestState from "./Context/RequestState";
+import AuthState from "./Context/AuthState";
 import Login from "./Pages/Login"
 
 import {
@@ -14,6 +15,7 @@ import {
 } from "react-router-dom";
 const App = () => {
   return (
+    <AuthState>
     <RequestState>
       <EquipmentState>
         <Routes>
@@ -23,6 +25,7 @@ const App = () => {
         </Routes>
       </EquipmentState>
     </RequestState>
+    </AuthState>
   );
 };
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createRequest, acceptRequest, declineRequest, confirmTransaction, getAllRequests } = require('../controllers/allocationController');
+const { createRequest, acceptRequest, declineRequest, confirmTransaction, getAllRequests } = require('../controllers/transactionController');
 
 // Create a new equipment request (Student)
 router.post('/requests', createRequest);
@@ -15,6 +15,6 @@ router.put('/requests/decline/:transactionId', declineRequest);
 router.put('/transactions/confirm/:transactionId', confirmTransaction);
 
 // Get all requests (Admin)
-router.get('/requests', getAllRequests);
+// router.get('/requests', getAllRequests);
 
 module.exports = router;
