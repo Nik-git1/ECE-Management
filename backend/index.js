@@ -8,11 +8,9 @@ const port = 3000;
 
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+app.use(cors({
+  origin: 'http://127.0.0.1:5173' 
+}));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/transaction", require("./routes/transaction"));
 app.use("/api/equipment/", require("./routes/equipment"));

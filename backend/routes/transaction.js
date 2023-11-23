@@ -23,7 +23,7 @@ router.put("/decline/:transactionId", declineRequest);
 router.put("/transactions/confirm/:transactionId", confirmTransaction);
 
 // Fetch all borrow requests (Admin)
-router.get("/requests", getAllRequests);
+router.get("/requests/:status", getAllRequests);
 
 // Fetch borrow requests of a student
 router.get("/srequests/:studentId", getRequestByStudentIDs);

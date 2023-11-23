@@ -21,9 +21,10 @@ const AdminBorrowRequest = () => {
   }, []);
 
   const fetchRequests = async () => {
+    const status = 'requested';
     try {
       const response = await fetch(
-        "http://localhost:3000/api/transaction/requests"
+        `http://localhost:3000/api/transaction/requests/${status}`
       );
       const data = await response.json();
 

@@ -55,17 +55,22 @@ const acceptRequest = async (req, res) => {
     }
 
     // Check if the request status is 'requested' before accepting
-    if (request.status !== "requested") {
+    if (request.status !== "requested" && request.status !== "returning") {
       return res.status(400).json({ error: "Invalid request status" });
     }
 
-    request.status = "accepted";
+    if(request.status === "requested"){
+      request.status = "accepted";
 
-    const equipment = await Equipment.findById(request.equipment);
-    equipment.quantity -= request.quantity;
+      const equipment = await Equipment.findById(request.equipment);
+      equipment.quantity -= request.quantity;
 
-    await Promise.all([request.save(), equipment.save()]);
-
+      await Promise.all([request.save(), equipment.save()]);
+    }
+    else{
+      request.status = "completed";
+      await request.save();
+    }
     res.status(200).json(request);
   } catch (error) {
     res
@@ -85,11 +90,18 @@ const declineRequest = async (req, res) => {
     }
 
     // Check if the request status is 'requested' before declining
-    if (request.status !== "requested") {
+    if (request.status !== "requested" && request.status !== "returning") {
       return res.status(400).json({ error: "Invalid request status" });
     }
-    request.status = "declined";
-    await request.save();
+
+    if(request.status === 'requested'){
+      request.status = "declined";
+      await request.save();
+    }
+    else{
+      request.status = "accepted";
+      await request.save();
+    }
 
     res.json(request);
   } catch (error) {
@@ -101,8 +113,9 @@ const declineRequest = async (req, res) => {
 
 // Fetch all requests
 const getAllRequests = async (req, res) => {
+  const { status } = req.params;
   try {
-    const Rrequests = await Transaction.find({ status: "requested" });
+    const Rrequests = await Transaction.find({ status: status});
 
     // Assuming that each request has a reference to student and equipment by _id
     const studentIds = Rrequests.map((request) => request.student);
