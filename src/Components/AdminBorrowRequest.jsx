@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-const AdminBorrowRequest = () => {
+const AdminBorrowRequest = ({ user }) => {
   const [requests, setRequests] = useState([]);
-
   const columnNames = [
     "S.No",
     "Equipment Name",
@@ -17,16 +16,18 @@ const AdminBorrowRequest = () => {
   ];
 
   useEffect(() => {
+    console.log(user);
     fetchRequests();
   }, []);
 
   const fetchRequests = async () => {
-    const status = 'requested';
+    const status = 'requested'
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/requests/${status}`
+        `http://localhost:3000/api/transaction/requests/${status}/${user.lab}`
       );
       const data = await response.json();
+      console.log(data);
 
       const requestsArray = data.Rrequests || [];
       const studentsArray = data.students || [];
@@ -168,7 +169,7 @@ const AdminBorrowRequest = () => {
 
   return (
     <div>
-      <h2>AdminBorrowRequest</h2>
+  
       <table className="w-full overflow-auto">
         <thead>{renderHeader()}</thead>
         <tbody>

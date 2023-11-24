@@ -5,7 +5,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { PiCheckBold } from 'react-icons/pi';
 import Swal from 'sweetalert2';
 
-const EquipmentTable = () => {
+const EquipmentTable = ({user}) => {
   const [equipmentData, setEquipmentData] = useState([]);
   const [editingRow, setEditingRow] = useState(-1);
   const [addingEquipment, setAddingEquipment] = useState(false);
@@ -16,7 +16,7 @@ const EquipmentTable = () => {
 
   const fetchEquipmentData = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/equipment/equipments');
+      const response = await fetch(`http://localhost:3000/api/equipment/equipments/${user.lab}`);
       const data = await response.json();
       setEquipmentData(data);
     } catch (error) {

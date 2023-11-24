@@ -112,9 +112,10 @@ const declineRequest = async (req, res) => {
 
 // Fetch all requests
 const getAllRequests = async (req, res) => {
-  const { status } = req.params;
+  const { status,lab } = req.params;
   try {
-    const Rrequests = await Transaction.find({ status: status});
+    const Rrequests = await Transaction.find({ status: status ,lab:lab});
+    console.log(Rrequests)
 
     // Assuming that each request has a reference to student and equipment by _id
     const studentIds = Rrequests.map((request) => request.student);

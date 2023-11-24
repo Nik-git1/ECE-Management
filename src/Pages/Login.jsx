@@ -48,8 +48,8 @@ const LoginPage = () => {
         
         localStorage.setItem("token",json.authtoken)
         console.log(json.authtoken)
-        const decodedToken = jwtDecode(json.authtoken); // Decode the JWT token
-        const userData = {
+        let decodedToken = jwtDecode(json.authtoken); // Decode the JWT token
+        let userData = {
           role:decodedToken['role'],
           id: decodedToken['id'],
           lab: decodedToken['lab'],

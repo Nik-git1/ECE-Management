@@ -205,4 +205,17 @@ const addAdmin = async (req, res) => {
   }
 };
 
-module.exports = { studentLogin, adminLogin, addStudent, addAdmin,sendOtp, verifyOtp };
+const students = async (req, res) => {
+  console.log("req")
+  try {
+    // Fetch all students from the database
+    const students = await Student.find({}, '-password'); // Exclude the password field from the response
+
+    // Send the list of students in the response
+    res.status(200).json({ success: true, students });
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+module.exports = { studentLogin, adminLogin, addStudent, addAdmin,sendOtp, verifyOtp,students };

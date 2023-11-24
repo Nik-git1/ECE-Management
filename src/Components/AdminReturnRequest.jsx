@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-const AdminReturnRequest = () => {
+const AdminReturnRequest = ({user}) => {
   const [requests, setRequests] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState("returning");
+
 
   const columnNames = [
     "S.No",
@@ -21,10 +23,10 @@ const AdminReturnRequest = () => {
   }, []);
 
   const fetchRequests = async () => {
-    const status = 'returning';
+   
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/requests/${status}`
+        `http://localhost:3000/api/transaction/requests/${selectedStatus}/${user.lab}`
       );
       const data = await response.json();
 
@@ -168,7 +170,18 @@ const AdminReturnRequest = () => {
 
   return (
     <div>
-      <h2>AdminBorrowRequest</h2>
+      <h2>Admin Borrow Request</h2>
+      <label htmlFor="status">Select Status:</label>
+      <select
+        id="status"
+        className="ml-2 p-2 border border-gray-300 rounded"
+        value={selectedStatus}
+        onChange={(e) => setSelectedStatus(e.target.value)}
+      >
+        <option value="returning">Returning</option>
+        <option value="completed">Completed</option>
+      
+      </select>
       <table className="w-full overflow-auto">
         <thead>{renderHeader()}</thead>
         <tbody>
