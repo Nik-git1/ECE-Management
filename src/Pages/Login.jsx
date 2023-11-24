@@ -53,7 +53,8 @@ const LoginPage = () => {
           role:decodedToken['role'],
           id: decodedToken['id'],
           lab: decodedToken['lab'],
-          username:decodedToken['username']
+          username:decodedToken['username'],
+          email:decodedToken['email']
         };
         console.log(userData)
         login(userData);

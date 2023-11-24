@@ -8,8 +8,10 @@ const {
   getAllRequests,
   getRequestByStudentIDs,
   createReturnRequest,
+  deleteRequest
 } = require("../controllers/transactionController");
 
+router.delete("/requests/delete", deleteRequest);
 // Create a new equipment request (Student)
 router.post("/requests", createRequest);
 

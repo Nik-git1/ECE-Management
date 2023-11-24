@@ -44,6 +44,41 @@ const createRequest = async (req, res) => {
   }
 };
 
+const deleteRequest = async (req, res) => {
+  try {
+    const { transactionId, userId } = req.body;
+
+    let request = await Transaction.findById(transactionId);
+    console.log(request)
+   
+    if (!request) {
+      return res.status(400).json({ error: "Request not found" });
+    }
+
+    // Check if the request status is 'requested' before declining
+    if (request.status !== "requested" && request.status !== "returning") {
+      return res.status(400).json({ error: "Invalid request status" });
+    }
+
+    // Check if the transaction is made by the specified user
+    if (request.student.toString() !== userId) {
+      return res.status(403).json({ error: "Unauthorized to decline this request" });
+    }
+    console.log(request.student.toString() !==userId)
+
+    // // Remove the request from the database
+    // await request.remove();
+    await request.deleteOne();
+
+    res.json({ message: "Request deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the request" });
+  }
+};
+
+
 // Accept a borrow request (Admin)
 const acceptRequest = async (req, res) => {
   try {
@@ -243,4 +278,5 @@ module.exports = {
   getAllRequests,
   getRequestByStudentIDs,
   createReturnRequest,
+  deleteRequest
 };

@@ -14,6 +14,34 @@ const StudentBorrowRequest = ({user}) => {
 
   const [tableData, setTableData] = useState([]);
 
+  const deleteRequest = async (transactionId, userId) => {
+    console.log(userId);
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/transaction/requests/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ transactionId, userId }),
+        }
+      );
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.error);
+        throw new Error(errorData.error);
+      }
+  
+      // Deletion was successful, now fetch updated data
+      await fetchRequestData();
+    } catch (error) {
+      console.error("Error deleting request:", error);
+    }
+  };
+  
+
   useEffect(() => {
     fetchRequestData();
   }, []);
@@ -45,14 +73,14 @@ const StudentBorrowRequest = ({user}) => {
       });
 
       // Check if requestDataArray is not empty before updating the state
-      if (requestDataArray.length > 0) {
+      // if (requestDataArray.length > 0) {
         setTableData(requestDataArray);
-      } else {
-        console.error(
-          "Error fetching requests: Request or equipments array is empty",
-          data
-        );
-      }
+      // } else {
+      //   console.error(
+      //     "Error fetching requests: Request or equipments array is empty",
+      //     data
+      //   );
+      // }
     } catch (error) {
       console.error("Error fetching requests:", error);
     }
@@ -93,9 +121,12 @@ const StudentBorrowRequest = ({user}) => {
         <td className={`border p-2 ${textColor}`}>{request.status}</td>
         <td className="border p-2">
           <div className="flex items-center justify-center">
-            <button className="bg-red-500 text-white px-2 py-1 rounded-md flex items-center mr-1">
-              Cancel Req.
-            </button>
+          <button
+                className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
+                onClick={() => deleteRequest(request._id, user.id)}
+              >
+                Cancel
+              </button>
           </div>
         </td>
       </tr>

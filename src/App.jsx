@@ -14,15 +14,33 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+
+import ProtectedRoute from "./ProtectedRoutes";
 const App = () => {
   return (
     <AuthState>
     <RequestState>
       <EquipmentState>
         <Routes>
-          <Route element={<AdminPage />} path="/admin/*"></Route>
-          <Route element={<StudentPage />} path="/student/*"></Route>
-          <Route element={<Login />} path="/"></Route>
+        <Route
+                element={
+                  <ProtectedRoute
+                    element={<AdminPage />}
+                    allowedRoles={['admin']}
+                  />
+                }
+                path="/admin/*"
+              />
+               <Route
+                element={
+                  <ProtectedRoute
+                    element={<StudentPage />}
+                    allowedRoles={['student']}
+                  />
+                }
+                path="/student/*"
+              />
+         <Route element={<Login />} path="/"></Route>
           <Route element={<Register />} path="/register"></Route>
         </Routes>
       </EquipmentState>
