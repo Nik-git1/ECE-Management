@@ -6,6 +6,7 @@ import StudentPage from "./Pages/StudentPage";
 import RequestState from "./Context/RequestState";
 import AuthState from "./Context/AuthState";
 import Login from "./Pages/Login"
+import Register from "./Pages/RegisterPage"
 
 import {
   useLocation,
@@ -22,6 +23,7 @@ const App = () => {
           <Route element={<AdminPage />} path="/admin/*"></Route>
           <Route element={<StudentPage />} path="/student/*"></Route>
           <Route element={<Login />} path="/"></Route>
+          <Route element={<Register />} path="/register"></Route>
         </Routes>
       </EquipmentState>
     </RequestState>
