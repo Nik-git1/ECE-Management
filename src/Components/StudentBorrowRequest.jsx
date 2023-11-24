@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const StudentBorrowRequest = () => {
+const StudentBorrowRequest = ({user}) => {
   const columnNames = [
     "S.No",
     "Equipment Name",
@@ -19,11 +19,11 @@ const StudentBorrowRequest = () => {
   }, []);
 
   const fetchRequestData = async () => {
-    const studentId = "655dc58d8f6f0f87ed8b59cd";
+   
     const status = ["requested", "accepted", "declined"];
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/srequests/${studentId}?status=${status}`,
+        `http://localhost:3000/api/transaction/srequests/${user.id}?status=${status}`,
         {
           method: "GET",
         }

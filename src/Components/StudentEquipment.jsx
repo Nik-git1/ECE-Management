@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 
-const StudentEquipment = () => {
+const StudentEquipment = ({user}) => {
   const [equipmentData, setEquipmentData] = useState();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [requestedQuantity, setRequestedQuantity] = useState(1);
@@ -27,7 +27,7 @@ const StudentEquipment = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            studentId: "655dc58d8f6f0f87ed8b59cd", // Replace with the actual studentId
+            studentId: user.id, // Replace with the actual studentId
             equipmentId: request.id,
             quantity: requestedQuantity,
             daysToUse: requestedDays,
@@ -151,6 +151,16 @@ const StudentEquipment = () => {
           onClick={() => setSelectedLab("lab3")}
         >
           Lab 3
+        </button>
+        <button
+          className={`${
+            selectedLab === "lab4"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-300 text-gray-600"
+          } px-4 py-2 rounded`}
+          onClick={() => setSelectedLab("lab4")}
+        >
+          Lab 4
         </button>
       </div>
       <table className="w-full border-collapse border">

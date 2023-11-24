@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const StudentDashBoard = () => {
+const StudentDashBoard = ({user}) => {
   const [tableData, setTableData] = useState([]);
   const [returnedTable, setReturnedTable] = useState([]);
 
@@ -9,13 +9,12 @@ const StudentDashBoard = () => {
   }, []);
 
   const fetchRequestData = async () => {
-    const studentId = "655dc58d8f6f0f87ed8b59cd";
     const statuses = ["accepted", "returning"]; // Use an array for multiple statuses
     const statusQueryParam = statuses.join(",");
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/srequests/${studentId}?status=${statusQueryParam}`,
+        `http://localhost:3000/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
         {
           method: "GET",
         }
@@ -59,7 +58,7 @@ const StudentDashBoard = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            studentId: "655dc58d8f6f0f87ed8b59cd", // Replace with the actual studentId
+            studentId: user.id, // Replace with the actual studentId
             transactionId: transactionId,
           }),
         }
@@ -78,13 +77,13 @@ const StudentDashBoard = () => {
   };
 
   const returnedData = async() => {
-    const studentId = "655dc58d8f6f0f87ed8b59cd";
+    
     const statuses = ["completed"]; // Use an array for multiple statuses
     const statusQueryParam = statuses.join(",");
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/srequests/${studentId}?status=${statusQueryParam}`,
+        `http://localhost:3000/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
         {
           method: "GET",
         }

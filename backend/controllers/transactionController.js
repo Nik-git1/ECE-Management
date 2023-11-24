@@ -112,7 +112,9 @@ const declineRequest = async (req, res) => {
 
 // Fetch all requests
 const getAllRequests = async (req, res) => {
+  
   const { status,lab } = req.params;
+  console.log(status)
   try {
     const Rrequests = await Transaction.find({ status: status ,lab:lab});
     console.log(Rrequests)

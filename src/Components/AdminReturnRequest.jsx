@@ -20,10 +20,9 @@ const AdminReturnRequest = ({user}) => {
 
   useEffect(() => {
     fetchRequests();
-  }, []);
+  }, [selectedStatus]);
 
   const fetchRequests = async () => {
-   
     try {
       const response = await fetch(
         `http://localhost:3000/api/transaction/requests/${selectedStatus}/${user.lab}`
@@ -148,21 +147,23 @@ const AdminReturnRequest = ({user}) => {
         <td className="border p-2 text-center">{request?.returnDate}</td>
         <td className="border p-2 text-center">{request?.returnedOn}</td>
         <td className="border p-2">
-          <div className="flex justify-between">
-            <button
-              className="bg-green-500 text-white px-2 py-1 rounded-md items-center"
-              onClick={() => acceptAlert(request._id)}
-            >
-              Approve
-            </button>
+        {selectedStatus === "returning" && (
+            <div className="flex justify-between">
+              <button
+                className="bg-green-500 text-white px-2 py-1 rounded-md items-center"
+                onClick={() => acceptAlert(request._id)}
+              >
+                Approve
+              </button>
 
-            <button
-              className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
-              onClick={() => declineAlert(request._id)}
-            >
-              Decline
-            </button>
-          </div>
+              <button
+                className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
+                onClick={() => declineAlert(request._id)}
+              >
+                Decline
+              </button>
+            </div>
+          )}
         </td>
       </tr>
     );
