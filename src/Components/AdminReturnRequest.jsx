@@ -14,7 +14,6 @@ const AdminReturnRequest = ({ user }) => {
     "Quantity",
     "Expected return Date",
     "Retuned On",
-    "Action",
   ];
 
   useEffect(() => {
@@ -128,6 +127,9 @@ const AdminReturnRequest = ({ user }) => {
             {columnName}
           </th>
         ))}
+        {selectedStatus === "returning" ? (
+          <th className="border p-2 text-center">Action</th>
+        ) : null}
       </tr>
     );
   };
@@ -195,7 +197,6 @@ const AdminReturnRequest = ({ user }) => {
 
   return (
     <div>
-      <h2>Admin Borrow Request</h2>
       <label htmlFor="status">Select Status:</label>
       <select
         id="status"

@@ -258,9 +258,14 @@ const declineRequest = async (req, res) => {
 const getAllRequests = async (req, res) => {
   
   const { status,lab } = req.params;
+  const baseQuery = { lab: lab };
+  if (status) {
+    const statusArray = status.split(","); // Split the comma-separated string into an array
+    baseQuery.status = { $in: statusArray }; // Use $in operator to match any of the provided statuses
+  }
   console.log(status)
   try {
-    const Rrequests = await Transaction.find({ status: status ,lab:lab});
+    const Rrequests = await Transaction.find(baseQuery);
     console.log(Rrequests)
 
     // Assuming that each request has a reference to student and equipment by _id
@@ -372,7 +377,7 @@ const createReturnRequest = async (req, res) => {
     await transaction.save(); // Use await directly on the save method
 
     res.status(200).json(transaction);
-    studentRequestMail("arnavkumarpalia27@gmail.com", student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, quantity, "return");
+    studentRequestMail("arnavkumarpalia27@gmail.com", student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, transaction.quantity, "return");
   } catch (error) {
     console.error("Error returning equipment:", error);
     res
