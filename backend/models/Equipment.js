@@ -26,6 +26,11 @@ const equipmentSchema = new mongoose.Schema({
     type: String,
     default: 'none',
   },
+  type:{
+    type:String,
+    default:'Miscellaneous',
+    required:true,
+  }
 });
 
 // Create the equipment model

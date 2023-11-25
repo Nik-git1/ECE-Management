@@ -4,11 +4,14 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { RxCross2 } from 'react-icons/rx';
 import { PiCheckBold } from 'react-icons/pi';
 import Swal from 'sweetalert2';
-
+import Modal from "react-modal";
 const EquipmentTable = ({user}) => {
   const [equipmentData, setEquipmentData] = useState([]);
   const [editingRow, setEditingRow] = useState(-1);
   const [addingEquipment, setAddingEquipment] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   useEffect(() => {
     fetchEquipmentData();
@@ -103,6 +106,9 @@ const EquipmentTable = ({user}) => {
           <input id="newQuantity" placeholder="Enter quantity" />
         </td>
         <td className='border p-2'>
+          <input id="newType" placeholder="Enter Type" />
+        </td>
+        <td className='border p-2'>
           <div className='flex justify-center'>
             <button
               className='bg-green-500 text-white px-2 py-1 rounded-md flex items-center mr-1'
@@ -130,10 +136,12 @@ const EquipmentTable = ({user}) => {
       const lab = document.getElementById('newLab').value.toLowerCase();
       const description = document.getElementById('newDescription').value;
       const quantity = document.getElementById('newQuantity').value;
+      const type = document.getElementById('newType').value;
+
       const allotmentDays = 0;
       console.log(lab);
       // Make sure all required fields are filled
-      if (!name || !lab || !description || !quantity) {
+      if (!name || !lab || !description || !quantity || !type) {
         Swal.fire('Error!', 'Please fill in all required fields.', 'error');
         return;
       }
@@ -149,7 +157,7 @@ const EquipmentTable = ({user}) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, lab, description, quantity, allotmentDays }),
+        body: JSON.stringify({ name, lab, description, quantity, allotmentDays,type }),
       });
   
       const data = await response.json();
@@ -176,13 +184,20 @@ const EquipmentTable = ({user}) => {
   const renderRow = (equipment, index) => {
     const isEditing = index === editingRow;
     const editingRowClass = 'bg-gray-300';
-
+  
     const handleFieldChange = (e, field) => {
       const updatedEquipmentData = [...equipmentData];
       updatedEquipmentData[index][field] = e.target.value;
       setEquipmentData(updatedEquipmentData);
     };
 
+    const isTypeSelected = selectedTypes.length === 0 || selectedTypes.includes(equipment.type);
+
+    if (
+      equipment.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      isTypeSelected // if it is inclueded in that list
+    ) {
+  
     return (
       <tr className={`text-center ${isEditing ? editingRowClass : ''}`} key={equipment._id}>
         <td className='border p-2'>{equipment._id}</td>
@@ -212,6 +227,13 @@ const EquipmentTable = ({user}) => {
             <input value={equipment.quantity} onChange={(e) => handleFieldChange(e, 'quantity')} />
           ) : (
             equipment.quantity
+          )}
+        </td>
+        <td className='border p-2'>
+          {isEditing ? (
+            <input value={equipment.type} onChange={(e) => handleFieldChange(e, 'type')} />
+          ) : (
+            equipment.type
           )}
         </td>
         <td className='border p-2'>
@@ -250,11 +272,13 @@ const EquipmentTable = ({user}) => {
           </div>
         </td>
       </tr>
-    );
+    ); }
+    return null;
   };
+  
 
   const renderHeaderRow = () => {
-    const columnNames = ['ID', 'Equipment Name', 'Lab', 'Description', 'Quantity', 'Action'];
+    const columnNames = ['ID', 'Equipment Name', 'Lab', 'Description', 'Quantity','Type', 'Action'];
 
     return (
       <tr className='bg-[#3dafaa] text-white'>
@@ -266,10 +290,87 @@ const EquipmentTable = ({user}) => {
       </tr>
     );
   };
+  const openFilterModal = () => {
+    setShowFilterModal(true);
+  };
 
   return (
-    <div className=''>
+    // <div className=''>
       <div className=''>
+      <div className="overflow-auto max-w-[83vw] max-h-[1000px] mt-4">
+      <div className="flex items-center  mb-4">
+        <div className="flex items-center">
+          <label className="block mb-0 mr-2">Search:</label>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+        </div>
+        <button
+          onClick={openFilterModal}
+          className="bg-gray-300 text-gray-600 px-16 py-2 rounded ml-2"
+        >
+          Filter
+        </button>
+      </div>
+      <Modal
+        isOpen={showFilterModal}
+        onRequestClose={() => setShowFilterModal(false)}
+        contentLabel="Equipment Filter Modal"
+        overlayClassName="overlay"
+      >
+        <div className="modal-content">
+          <h2 className="text-2xl font-bold mb-4">Filter Equipment Types</h2>
+          
+          {/* Checkboxes for each equipment type */}
+          <div className="mb-2">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={selectedTypes.includes("Capacitor")}
+                onChange={() =>
+                  setSelectedTypes((prev) =>
+                    prev.includes("Capacitor")
+                      ? prev.filter((t) => t !== "Capacitor")
+                      : [...prev, "Capacitor"]
+                  )
+                }
+                className="form-checkbox h-5 w-5 text-gray-600"
+              />
+              <span className="ml-2">Capacitor</span>
+            </label>
+          </div>
+  
+          <div className="mb-2">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={selectedTypes.includes("Resistors")}
+                onChange={() =>
+                  setSelectedTypes((prev) =>
+                    prev.includes("Resistor")
+                      ? prev.filter((t) => t !== "Resistors")
+                      : [...prev, "Resistors"]
+                  )
+                }
+                className="form-checkbox h-5 w-5 text-gray-600"
+              />
+              <span className="ml-2">Resistors</span>
+            </label>
+          </div>
+  
+        
+          <button
+            onClick={() => setShowFilterModal(false)}
+            className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </Modal>
+
         <div className='flex justify-end'>
           <button
             className='rounded-full bg-[#3dafaa] text-white border-2 border-[#3dafaa] py-1 px-3 mt-2 mb-1 mr-1 hover:bg-white hover:text-[#3dafaa]'
