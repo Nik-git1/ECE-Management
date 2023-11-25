@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-const StudentDashBoard = ({user}) => {
+const StudentDashBoard = ({ user }) => {
   const [tableData, setTableData] = useState([]);
   const [returnedTable, setReturnedTable] = useState([]);
 
   useEffect(() => {
-    fetchRequestData();returnedData();
+    fetchRequestData();
+    returnedData();
   }, []);
 
   const fetchRequestData = async () => {
@@ -76,8 +77,7 @@ const StudentDashBoard = ({user}) => {
     }
   };
 
-  const returnedData = async() => {
-    
+  const returnedData = async () => {
     const statuses = ["completed"]; // Use an array for multiple statuses
     const statusQueryParam = statuses.join(",");
 
@@ -115,7 +115,7 @@ const StudentDashBoard = ({user}) => {
     } catch (error) {
       console.error("Error fetching requests:", error);
     }
-  }
+  };
 
   const columnNames = [
     "S.No",
@@ -135,6 +135,14 @@ const StudentDashBoard = ({user}) => {
 
   const renderEquipedRow = (data, index) => {
     const { equipment, request } = data;
+    const formattedReturnedOn = new Date(request.returnedOn).toLocaleDateString(
+      "en-GB",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
 
     return (
       <tr className="text-center" key={index}>
@@ -142,7 +150,7 @@ const StudentDashBoard = ({user}) => {
         <td className="border p-2">{equipment.name}</td>
         <td className="border p-2">{request.lab}</td>
         <td className="border p-2">{request.quantity}</td>
-        <td className="border p-2">{request.returnDate}</td>
+        <td className="border p-2">{formattedReturnedOn}</td>
         <td className="border p-2">
           <div className="flex items-center justify-center">
             {request.status === "returning" ? (
@@ -163,13 +171,21 @@ const StudentDashBoard = ({user}) => {
 
   const renderReturnedRow = (data, index) => {
     const { equipment, request } = data;
+    const formattedReturnedOn = new Date(request.returnedOn).toLocaleDateString(
+      "en-GB",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
     return (
       <tr className="text-center" key={index}>
         <td className="border p-2">{index + 1}</td>
         <td className="border p-2">{equipment.name}</td>
         <td className="border p-2">{request.quantity}</td>
         <td className="border p-2">{request.lab}</td>
-        <td className="border p-2">{request.returnedOn}</td>
+        <td className="border p-2">{formattedReturnedOn}</td>
       </tr>
     );
   };

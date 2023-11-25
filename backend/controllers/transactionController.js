@@ -1,6 +1,104 @@
 const Transaction = require("../models/Transaction");
 const Equipment = require("../models/Equipment");
 const Student = require("../models/Student");
+const asyncHandler = require("express-async-handler");
+const nodemailer = require( 'nodemailer' );
+
+
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: "arnav20363@iiitd.ac.in",
+    pass: "meatiiitdelhi@123", // use env file for this data , also kuch settings account ki change krni padti vo krliyo
+  },
+});
+
+// Send email for student request to admin
+const studentRequestMail = asyncHandler(
+  async (studentEmail, studentName, studentRollNo, studentContact, adminEmail, equipmentName, quantity, requestType) => {
+    let subject = `Equipment ${requestType} request`;
+    let mailText = 'Borrow';
+
+    if(requestType === 'borrow'){
+      mailText = 'Borrow';
+    }
+    else{
+      mailText = 'Return';
+    }
+    const htmlContent = `
+      <html>
+        <head>
+          <style>
+            /* Add your styles here */
+          </style>
+        </head>
+        <body>
+          <h2>Student:</h2>
+          
+          <p><strong>Email:</strong> ${studentEmail}</p>
+          <p><strong>Name:</strong> ${studentName}</p>
+          <p><strong>Roll No.</strong> ${studentRollNo}</p>
+          <p><strong>Conatact</strong> ${studentContact}</p>
+
+          <h2>${mailText} Requested for:</h2>
+          <p><strong>Equipment:</strong> ${equipmentName}</p>
+          <p><strong>Qunatity:</strong> ${quantity}</p>
+        </body>
+      </html>
+    `;
+    const mailOptions = {
+      from: "arnav20363@iiitd.ac.in",
+      to: [adminEmail,studentEmail], // Use an array for multiple recipients
+      subject: subject,
+      html: htmlContent,
+    };
+
+    transporter.sendMail(mailOptions);
+  }
+);
+
+const requestApprovedAndDeclinedMail = asyncHandler(
+  async (studentEmail, studentName, adminEmail, adminName, equipmentName, quantity, requestType, adminresponse) => {
+
+    let AdminResponse = "Approval";
+    let RequestType = "borrow";
+    let mailText = "approved"
+    if (requestType === "borrow") {
+      RequestType = "borrow";
+    } if (requestType === "return") {
+      RequestType = "return";
+    } if (adminresponse === "Approval") {
+      AdminResponse = "Approval";
+      mailText = "approved";
+    }
+    if (adminresponse === "Decline") {
+      AdminResponse = "Decline";
+      mailText = "declined";
+    }
+    let subject = `${AdminResponse} of ${RequestType} request`;
+
+    const htmlContent = `
+      <html>
+        <head>
+          <style>
+            /* Add your styles here */
+          </style>
+        </head>
+        <body>
+          <p>Student:<strong> ${studentName}</strong> ${requestType} request for Equipment:<strong> ${equipmentName}</strong> is being ${mailText} by Admin:<strong> ${adminName}</strong></p>
+        </body>
+      </html>
+    `;
+    const mailOptions = {
+      from: "arnav20363@iiitd.ac.in",
+      to: [adminEmail, studentEmail], // Use an array for multiple recipients
+      subject: subject,
+      html: htmlContent,
+    };
+
+    transporter.sendMail(mailOptions);
+  }
+);
 
 //create a borrow request
 const createRequest = async (req, res) => {
@@ -35,7 +133,7 @@ const createRequest = async (req, res) => {
     });
     
     await request.save();
-
+    studentRequestMail("arnavkumarpalia27@gmail.com", student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, quantity, "borrow");
     res.status(201).json(request);
   } catch (error) {
     res
@@ -84,6 +182,9 @@ const acceptRequest = async (req, res) => {
   try {
     const { transactionId } = req.params;
     const request = await Transaction.findById(transactionId);
+    const student = await Student.findById(request.student);
+    const equipment = await Equipment.findById(request.equipment);
+  
     if (!request) {
       return res.status(400).json({ error: "Request not found" });
     }
@@ -96,14 +197,17 @@ const acceptRequest = async (req, res) => {
     if(request.status === "requested"){
       request.status = "accepted";
 
-      const equipment = await Equipment.findById(request.equipment);
       equipment.quantity -= request.quantity;
 
       await Promise.all([request.save(), equipment.save()]);
+      requestApprovedAndDeclinedMail("arnavkumarpalia27@gmail.com", student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "borrow", "Approval");
     }
     else{
       request.status = "completed";
-      await request.save();
+      equipment.quantity += request.quantity;
+
+      await Promise.all([request.save(), equipment.save()]);
+      requestApprovedAndDeclinedMail("arnavkumarpalia27@gmail.com", student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "return", "Approval");
     }
     res.status(200).json(request);
   } catch (error) {
@@ -119,6 +223,8 @@ const declineRequest = async (req, res) => {
     const { transactionId } = req.params;
 
     const request = await Transaction.findById(transactionId);
+    const student = await Student.findById(request.student);
+    const equipment = await Equipment.findById(request.equipment);
     if (!request) {
       return res.status(400).json({ error: "Request not found" });
     }
@@ -131,10 +237,13 @@ const declineRequest = async (req, res) => {
     if(request.status === 'requested'){
       request.status = "declined";
       await request.save();
+      requestApprovedAndDeclinedMail("arnavkumarpalia27@gmail.com", student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "borrow", "Decline");
     }
     else{
       request.status = "accepted";
       await request.save();
+      requestApprovedAndDeclinedMail("arnavkumarpalia27@gmail.com", student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "return", "Decline");
+      
     }
 
     res.json(request);
@@ -244,6 +353,7 @@ const createReturnRequest = async (req, res) => {
     const { studentId, transactionId } = req.body;
 
     const transaction = await Transaction.findById(transactionId);
+    const equipment = await Equipment.findById(transaction.equipment);
     if (!transaction) {
       return res.status(400).json({ error: "Transaction not found" });
     }
@@ -262,6 +372,7 @@ const createReturnRequest = async (req, res) => {
     await transaction.save(); // Use await directly on the save method
 
     res.status(200).json(transaction);
+    studentRequestMail("arnavkumarpalia27@gmail.com", student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, quantity, "return");
   } catch (error) {
     console.error("Error returning equipment:", error);
     res
