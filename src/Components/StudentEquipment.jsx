@@ -147,7 +147,7 @@ const StudentEquipment = ({user}) => {
             selectedLab === "lab3"
               ? "bg-blue-500 text-white"
               : "bg-gray-300 text-gray-600"
-          } px-4 py-2 rounded`}
+          } px-4 py-2 rounded mr-2`}
           onClick={() => setSelectedLab("lab3")}
         >
           Lab 3
