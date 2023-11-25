@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const StudentBorrowRequest = ({user}) => {
+const StudentBorrowRequest = ({ user }) => {
   const columnNames = [
     "S.No",
     "Equipment Name",
@@ -27,27 +27,25 @@ const StudentBorrowRequest = ({user}) => {
           body: JSON.stringify({ transactionId, userId }),
         }
       );
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         alert(errorData.error);
         throw new Error(errorData.error);
       }
-  
+
       // Deletion was successful, now fetch updated data
       await fetchRequestData();
     } catch (error) {
       console.error("Error deleting request:", error);
     }
   };
-  
 
   useEffect(() => {
     fetchRequestData();
   }, []);
 
   const fetchRequestData = async () => {
-   
     const status = ["requested", "accepted", "declined"];
     try {
       const response = await fetch(
@@ -74,7 +72,7 @@ const StudentBorrowRequest = ({user}) => {
 
       // Check if requestDataArray is not empty before updating the state
       // if (requestDataArray.length > 0) {
-        setTableData(requestDataArray);
+      setTableData(requestDataArray);
       // } else {
       //   console.error(
       //     "Error fetching requests: Request or equipments array is empty",
@@ -100,6 +98,22 @@ const StudentBorrowRequest = ({user}) => {
 
   const renderRow = (data, index) => {
     const { equipment, request } = data;
+    const formattedReturnedOn = new Date(request.returnedOn).toLocaleDateString(
+      "en-GB",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
+
+    const formattedReturnedOnstart = new Date(
+      request.startDate
+    ).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
 
     let textColor;
     if (request.status === "requested") {
@@ -116,17 +130,17 @@ const StudentBorrowRequest = ({user}) => {
         <td className="border p-2">{equipment.name}</td>
         <td className="border p-2">{request.lab}</td>
         <td className="border p-2">{request.quantity}</td>
-        <td className="border p-2">{request.startDate}</td>
-        <td className="border p-2">{request.returnDate}</td>
+        <td className="border p-2">{formattedReturnedOnstart}</td>
+        <td className="border p-2">{formattedReturnedOn}</td>
         <td className={`border p-2 ${textColor}`}>{request.status}</td>
         <td className="border p-2">
           <div className="flex items-center justify-center">
-          <button
-                className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
-                onClick={() => deleteRequest(request._id, user.id)}
-              >
-                Cancel
-              </button>
+            <button
+              className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
+              onClick={() => deleteRequest(request._id, user.id)}
+            >
+              Cancel
+            </button>
           </div>
         </td>
       </tr>

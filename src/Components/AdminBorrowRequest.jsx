@@ -21,7 +21,7 @@ const AdminBorrowRequest = ({ user }) => {
   }, []);
 
   const fetchRequests = async () => {
-    const status = 'requested'
+    const status = "requested";
     try {
       const response = await fetch(
         `http://localhost:3000/api/transaction/requests/${status}/${user.lab}`
@@ -135,7 +135,22 @@ const AdminBorrowRequest = ({ user }) => {
 
   const renderRow = (requestData, index) => {
     const { equipment, student, request } = requestData;
-
+    const formattedreturndate = new Date(request.returnDate).toLocaleDateString(
+      "en-GB",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
+    const formattedstartDate = new Date(request.startDate).toLocaleDateString(
+      "en-GB",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
     return (
       <tr key={index}>
         <td className="border p-2 text-center">{index + 1}</td>
@@ -143,9 +158,9 @@ const AdminBorrowRequest = ({ user }) => {
         <td className="border p-2 text-center">{student?.email}</td>
         <td className="border p-2 text-center">{student?.contactNumber}</td>
         <td className="border p-2 text-center">{student?.graduation_type}</td>
-        <td className="border p-2 text-center">{request?.startDate}</td>
+        <td className="border p-2 text-center">{formattedstartDate}</td>
         <td className="border p-2 text-center">{request?.quantity}</td>
-        <td className="border p-2 text-center">{request?.returnDate}</td>
+        <td className="border p-2 text-center">{formattedreturndate}</td>
         <td className="border p-2">
           <div className="flex justify-between">
             <button
@@ -169,7 +184,6 @@ const AdminBorrowRequest = ({ user }) => {
 
   return (
     <div>
-  
       <table className="w-full overflow-auto">
         <thead>{renderHeader()}</thead>
         <tbody>

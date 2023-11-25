@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-const AdminReturnRequest = ({user}) => {
+const AdminReturnRequest = ({ user }) => {
   const [requests, setRequests] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("returning");
-
 
   const columnNames = [
     "S.No",
@@ -136,18 +135,43 @@ const AdminReturnRequest = ({user}) => {
   const renderRow = (requestData, index) => {
     const { equipment, student, request } = requestData;
 
+    const formattedReturnedOn = new Date(request.returnedOn).toLocaleDateString(
+      "en-GB",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
+    const formattedStartDate = new Date(request.startDate).toLocaleDateString(
+      "en-GB",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
+    const formattedreturndate = new Date(request.returnDate).toLocaleDateString(
+      "en-GB",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
+
     return (
       <tr key={index}>
         <td className="border p-2 text-center">{index + 1}</td>
         <td className="border p-2 text-center">{equipment?.name}</td>
         <td className="border p-2 text-center">{student?.email}</td>
         <td className="border p-2 text-center">{student?.contactNumber}</td>
-        <td className="border p-2 text-center">{request?.startDate}</td>
+        <td className="border p-2 text-center">{formattedStartDate}</td>
         <td className="border p-2 text-center">{request?.quantity}</td>
-        <td className="border p-2 text-center">{request?.returnDate}</td>
-        <td className="border p-2 text-center">{request?.returnedOn}</td>
+        <td className="border p-2 text-center">{formattedreturndate}</td>
+        <td className="border p-2 text-center">{formattedReturnedOn}</td>
         <td className="border p-2">
-        {selectedStatus === "returning" && (
+          {selectedStatus === "returning" && (
             <div className="flex justify-between">
               <button
                 className="bg-green-500 text-white px-2 py-1 rounded-md items-center"
@@ -181,7 +205,6 @@ const AdminReturnRequest = ({user}) => {
       >
         <option value="returning">Returning</option>
         <option value="completed">Completed</option>
-      
       </select>
       <table className="w-full overflow-auto">
         <thead>{renderHeader()}</thead>
