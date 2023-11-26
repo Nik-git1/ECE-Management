@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Define the lab enumeration values
-const labEnum = ["lab1", "lab2", "lab3"];
+const labEnum = ["lab1", "lab2", "lab3","lab4"];
 
 // Define the equipment schema
 const equipmentSchema = new mongoose.Schema({
@@ -30,6 +30,10 @@ const equipmentSchema = new mongoose.Schema({
     type:String,
     default:'Miscellaneous',
     required:true,
+  },
+  link:{
+    type:String,
+    default:""
   }
 });
 

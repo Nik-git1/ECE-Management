@@ -3,8 +3,8 @@ const Equipment = require('../models/Equipment'); // Assuming you have the Equip
 // Add Equipment
 const addEquipments = async (req, res) => {
   try {
-    const { name, lab, description, quantity, allotmentDays } = req.body;
-    const newEquipment = new Equipment({ name, lab, description, quantity, allotmentDays });
+    const { name, lab, description, link, quantity, allotmentDays, type } = req.body;
+    const newEquipment = new Equipment({ name, lab, description, link, quantity, allotmentDays, type });
     await newEquipment.save();
     res.status(201).json({ message: 'Equipment created successfully', equipment: newEquipment });
   } catch (error) {
@@ -37,10 +37,10 @@ const getAllEquipments = async (req, res) => {
 const updateEquipments = async (req, res) => {
   try {
     const equipmentId = req.params.id;
-    const { name, lab, description, quantity, allotmentDays } = req.body;
+    const { name, lab, description, link, quantity, allotmentDays } = req.body;
     const updatedEquipment = await Equipment.findByIdAndUpdate(
       equipmentId,
-      { name, lab, description, quantity, allotmentDays },
+      { name, lab, description, link, quantity, allotmentDays },
       { new: true }
     );
     res.json({ message: 'Equipment updated successfully', equipment: updatedEquipment });

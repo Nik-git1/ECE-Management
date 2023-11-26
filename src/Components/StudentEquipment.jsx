@@ -88,6 +88,16 @@ const StudentEquipment = ({ user }) => {
           <td className="border p-2">{serialNumber}</td>
           <td className="border p-2">{equipment.name}</td>
           <td className="border p-2">{equipment.descrption}</td>
+          <td className="border p-2">{equipment.link !== "" ?(
+            <div className="flex justify-center">
+              <button className='bg-blue-500 text-white px-2 py-1 rounded-md flex items-center mr-1'
+                onClick={() => window.open(equipment.link, "_blank")}
+              >
+                Link
+              </button>
+            </div>):
+            (null)}
+          </td>
           <td className="border p-2">{equipment.type}</td>
           <td className="border p-2">{equipment.quantity}</td>
           <td className="border p-2">
@@ -113,6 +123,7 @@ const StudentEquipment = ({ user }) => {
     "ID",
     "Equipment Name",
     "Description",
+    "More Info",
     "Type",
     "Quantity",
     "Action",

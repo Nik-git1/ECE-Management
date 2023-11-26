@@ -58,6 +58,7 @@ const EquipmentTable = ({user}) => {
 
   const handleCancel = () => {
     setEditingRow(-1);
+    fetchEquipmentData();
   };
 
   const handleDelete = async (rowIndex) => {
@@ -103,6 +104,9 @@ const EquipmentTable = ({user}) => {
           <input id="newDescription" placeholder="Enter description" />
         </td>
         <td className='border p-2'>
+          <input id="newLink" placeholder="Upload Link" />
+        </td>
+        <td className='border p-2'>
           <input id="newQuantity" placeholder="Enter quantity" />
         </td>
         <td className='border p-2'>
@@ -135,6 +139,7 @@ const EquipmentTable = ({user}) => {
       const name = document.getElementById('newName').value;
       const lab = document.getElementById('newLab').value.toLowerCase();
       const description = document.getElementById('newDescription').value;
+      const link = document.getElementById('newLink').value;
       const quantity = document.getElementById('newQuantity').value;
       const type = document.getElementById('newType').value;
 
@@ -157,7 +162,7 @@ const EquipmentTable = ({user}) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, lab, description, quantity, allotmentDays,type }),
+        body: JSON.stringify({ name, lab, description, link, quantity, allotmentDays, type }),
       });
   
       const data = await response.json();
@@ -197,10 +202,10 @@ const EquipmentTable = ({user}) => {
       equipment.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       isTypeSelected // if it is inclueded in that list
     ) {
-  
+      const serialNumber = index + 1;
     return (
       <tr className={`text-center ${isEditing ? editingRowClass : ''}`} key={equipment._id}>
-        <td className='border p-2'>{equipment._id}</td>
+        <td className='border p-2'>{serialNumber}</td>
         <td className='border p-2'>
           {isEditing ? (
             <input value={equipment.name} onChange={(e) => handleFieldChange(e, 'name')} />
@@ -220,6 +225,15 @@ const EquipmentTable = ({user}) => {
             <input value={equipment.description} onChange={(e) => handleFieldChange(e, 'description')} />
           ) : (
             equipment.description
+          )}
+        </td>
+        <td className='border p-2'>
+          {isEditing ? (
+            <input value={equipment.link} onChange={(e) => handleFieldChange(e, 'link')} />
+          ) : (
+            <a href={equipment.link} target="_blank" rel="noopener noreferrer">
+              {equipment.link}
+            </a>
           )}
         </td>
         <td className='border p-2'>
@@ -278,7 +292,7 @@ const EquipmentTable = ({user}) => {
   
 
   const renderHeaderRow = () => {
-    const columnNames = ['ID', 'Equipment Name', 'Lab', 'Description', 'Quantity','Type', 'Action'];
+    const columnNames = ['S.No', 'Equipment Name', 'Lab', 'Description', 'More Info', 'Quantity','Type', 'Action'];
 
     return (
       <tr className='bg-[#3dafaa] text-white'>
@@ -297,7 +311,7 @@ const EquipmentTable = ({user}) => {
   return (
     // <div className=''>
       <div className=''>
-      <div className="overflow-auto max-w-[83vw] max-h-[1000px] mt-4">
+      <div >
       <div className="flex items-center  mb-4">
         <div className="flex items-center">
           <label className="block mb-0 mr-2">Search:</label>
@@ -379,7 +393,7 @@ const EquipmentTable = ({user}) => {
             Add Equipment
           </button>
         </div>
-        <div className='overflow-auto max-w-[83vw] max-h-[1000px]'>
+        <div className='overflow-auto max-w-[83vw] max-h-[70vh]'>
           <table className='w-full border-collapse border'>
             <thead className='sticky top-0'>{renderHeaderRow()}</thead>
             <tbody>
