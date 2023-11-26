@@ -263,17 +263,31 @@ const getAllRequests = async (req, res) => {
     const statusArray = status.split(","); // Split the comma-separated string into an array
     baseQuery.status = { $in: statusArray }; // Use $in operator to match any of the provided statuses
   }
-  console.log(status)
   try {
     const Rrequests = await Transaction.find(baseQuery);
-    console.log(Rrequests)
+
 
     // Assuming that each request has a reference to student and equipment by _id
     const studentIds = Rrequests.map((request) => request.student);
     const equipmentIds = Rrequests.map((request) => request.equipment);
 
-    const students = await Student.find({ _id: { $in: studentIds } });
-    const equipments = await Equipment.find({ _id: { $in: equipmentIds } });
+    // Fetch all students based on the array of student IDs
+    const students = [];
+    for (const studentId of studentIds) {
+      const student = await Student.findById(studentId);
+      if (student) {
+        students.push(student);
+      }
+    }
+    
+    // Fetch all equipments based on the array of equipment IDs
+    const equipments = [];
+    for (const equipmentId of equipmentIds) {
+      const equipment = await Equipment.findById(equipmentId);
+      if (equipment) {
+        equipments.push(equipment);
+      }
+    }
 
     res.status(200).json({ Rrequests, students, equipments });
   } catch (error) {
