@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
+import Swal from "sweetalert2";
 
 const StudentEquipment = ({ user }) => {
   const [equipmentData, setEquipmentData] = useState();
@@ -47,6 +48,7 @@ const StudentEquipment = ({ user }) => {
 
       // Handle success, you can update the UI or take other actions if needed
       console.log("Request sent successfully");
+      Swal.fire('Requested Successfully', 'Your request has been sent to the admin', 'success');
       closeModal();
     } catch (error) {
       console.error("Error sending request:", error.message);

@@ -258,17 +258,36 @@ const declineRequest = async (req, res) => {
 const getAllRequests = async (req, res) => {
   
   const { status,lab } = req.params;
-  console.log(status)
+  const baseQuery = { lab: lab };
+  if (status) {
+    const statusArray = status.split(","); // Split the comma-separated string into an array
+    baseQuery.status = { $in: statusArray }; // Use $in operator to match any of the provided statuses
+  }
   try {
-    const Rrequests = await Transaction.find({ status: status ,lab:lab});
-    console.log(Rrequests)
+    const Rrequests = await Transaction.find(baseQuery);
+
 
     // Assuming that each request has a reference to student and equipment by _id
     const studentIds = Rrequests.map((request) => request.student);
     const equipmentIds = Rrequests.map((request) => request.equipment);
 
-    const students = await Student.find({ _id: { $in: studentIds } });
-    const equipments = await Equipment.find({ _id: { $in: equipmentIds } });
+    // Fetch all students based on the array of student IDs
+    const students = [];
+    for (const studentId of studentIds) {
+      const student = await Student.findById(studentId);
+      if (student) {
+        students.push(student);
+      }
+    }
+    
+    // Fetch all equipments based on the array of equipment IDs
+    const equipments = [];
+    for (const equipmentId of equipmentIds) {
+      const equipment = await Equipment.findById(equipmentId);
+      if (equipment) {
+        equipments.push(equipment);
+      }
+    }
 
     res.status(200).json({ Rrequests, students, equipments });
   } catch (error) {
@@ -372,7 +391,7 @@ const createReturnRequest = async (req, res) => {
     await transaction.save(); // Use await directly on the save method
 
     res.status(200).json(transaction);
-    studentRequestMail("arnavkumarpalia27@gmail.com", student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, quantity, "return");
+    studentRequestMail("arnavkumarpalia27@gmail.com", student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, transaction.quantity, "return");
   } catch (error) {
     console.error("Error returning equipment:", error);
     res

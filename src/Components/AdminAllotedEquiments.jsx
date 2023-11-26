@@ -12,7 +12,6 @@ const AdminBorrowRequest = ({ user }) => {
     "Quantity",
     "Expected return Date",
     "Retuned On",
-    "Action",
   ];
 
   useEffect(() => {
@@ -20,7 +19,7 @@ const AdminBorrowRequest = ({ user }) => {
   }, []);
 
   const fetchRequests = async () => {
-    const status = "accepted";
+    const status = ["accepted","returning"];
     try {
       const response = await fetch(
         `http://localhost:3000/api/transaction/requests/${status}/${user.lab}`

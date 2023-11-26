@@ -39,7 +39,6 @@ const AdminDashboard = () => {
         <th className="border p-2 text-center">Email</th>
         <th className="border p-2 text-center">Roll Number</th>
         <th className="border p-2 text-center">Enrollment Date</th>
-        <th className="border p-2 text-center">Graduation Type</th>
         <th className="border p-2 text-center">Contact Number</th>
         <th className="border p-2 text-center">Action</th>
       </tr>
@@ -56,7 +55,6 @@ const AdminDashboard = () => {
         <td className="border p-2 text-center">
           {new Date(student.enrollmentDate).toLocaleDateString()}
         </td>
-        <td className="border p-2 text-center">{student.graduation_type}</td>
         <td className="border p-2 text-center">{student.contactNumber}</td>
         <td className="border p-2 text-center">
           <button

@@ -8,10 +8,9 @@ const AdminBorrowRequest = ({ user }) => {
     "Equipment Name",
     "Student Email ID",
     "Contact",
-    "Graduation Type",
-    "Request Time",
+    "Request Date",
     "Quantity",
-    "Requested for",
+    "Return Date",
     "Action",
   ];
 
@@ -157,7 +156,6 @@ const AdminBorrowRequest = ({ user }) => {
         <td className="border p-2 text-center">{equipment?.name}</td>
         <td className="border p-2 text-center">{student?.email}</td>
         <td className="border p-2 text-center">{student?.contactNumber}</td>
-        <td className="border p-2 text-center">{student?.graduation_type}</td>
         <td className="border p-2 text-center">{formattedstartDate}</td>
         <td className="border p-2 text-center">{request?.quantity}</td>
         <td className="border p-2 text-center">{formattedreturndate}</td>
@@ -184,7 +182,7 @@ const AdminBorrowRequest = ({ user }) => {
 
   return (
     <div>
-      <table className="w-full overflow-auto">
+      <table className="w-full overflow-auto mt-4">
         <thead>{renderHeader()}</thead>
         <tbody>
           {requests.map((requestData, index) => renderRow(requestData, index))}
