@@ -5,7 +5,7 @@ const studentSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true, // Ensure unique email addresses
+    unique: true,
   },
   fullName: {
     type: String,
@@ -14,23 +14,33 @@ const studentSchema = new mongoose.Schema({
   rollNumber: {
     type: String,
     required: true,
-    unique: true, // Ensure unique roll numbers
+    unique: true,
   },
   password: {
     type: String,
     required: true,
   },
   enrollmentDate: {
-    type: Date, // Date when the student is enrolled
-    default: Date.now, // Set a default value to the current date and time
-    required: true},
-  graduation_type: {
+    type: Date,
+    default: Date.now,
+    required: true
+  },
+  graduationType: {
     type: String,
-    enum: ['btech','mtech','phd'],
-    require: true
+    enum: ['btech', 'mtech', 'phd'],
+    required: true
   },
   contactNumber: {
     type: String,
+  },
+  branch: {
+    type: String,
+    enum: ['cse', 'csb', 'csam', 'csd', 'ece', 'csss', 'vlsi','csai'],
+    required: true,
+  },
+  graduationYear: {
+    type: Number,
+    required: true,
   },
 });
 

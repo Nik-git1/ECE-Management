@@ -92,7 +92,7 @@ const verifyOtp = async (req, res) => {
 // Register a new student
 const addStudent = async (req, res) => {
   try {
-    const { email, password, fullName, rollNumber, enrollmentDate, contactNumber } = req.body;
+    const { email, password, fullName, rollNumber, graduationType, branch, graduationYear, contactNumber } = req.body;
 
     // Check if student with the same email or rollNumber already exists
     const existingStudent = await Student.findOne({ $or: [{ email }, { rollNumber }] });
@@ -103,12 +103,18 @@ const addStudent = async (req, res) => {
     // Hash the password using Argon2 before saving it to the database
     const hashedPassword = await argon2.hash(password);
 
+    // Assign the current time as the enrollment date
+    const enrollmentDate = new Date();
+
     // Create a new student instance
     const newStudent = new Student({
       email,
       password: hashedPassword,
       fullName,
       rollNumber,
+      graduationType,
+      branch,
+      graduationYear,
       enrollmentDate,
       contactNumber,
     });

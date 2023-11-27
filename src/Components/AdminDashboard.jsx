@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
+
 const AdminDashboard = () => {
   const [students, setStudents] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState("");
+  const [selectedBranch, setSelectedBranch] = useState("");
+  const [selectedGraduationYear, setSelectedGraduationYear] = useState("");
 
   useEffect(() => {
     // Fetch all students from the API
@@ -40,40 +44,101 @@ const AdminDashboard = () => {
         <th className="border p-2 text-center">Roll Number</th>
         <th className="border p-2 text-center">Enrollment Date</th>
         <th className="border p-2 text-center">Contact Number</th>
+        <th className="border p-2 text-center">Branch</th>
+        <th className="border p-2 text-center">Batch</th>
+        <th className="border p-2 text-center">Graduation Year</th>
         <th className="border p-2 text-center">Action</th>
       </tr>
     );
   };
 
   const renderRow = (student, index) => {
-    return (
-      <tr key={index}>
-        <td className="border p-2 text-center">{index + 1}</td>
-        <td className="border p-2 text-center">{student.fullName}</td>
-        <td className="border p-2 text-center">{student.email}</td>
-        <td className="border p-2 text-center">{student.rollNumber}</td>
-        <td className="border p-2 text-center">
-          {new Date(student.enrollmentDate).toLocaleDateString()}
-        </td>
-        <td className="border p-2 text-center">{student.contactNumber}</td>
-        <td className="border p-2 text-center">
-          <button
-            className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
-            onClick={() => disableStudent(student._id)}
-          >
-            Clear Dues
-          </button>
-        </td>
-      </tr>
-    );
+    console.log(selectedBatch)
+    console.log(student.graduationType)
+    const isBatchSelected =
+      selectedBatch === "" || student.graduationType === selectedBatch; 
+
+    const isBranchSelected =
+      selectedBranch === "" || student.branch === selectedBranch;
+    const isGraduationYearSelected =
+      selectedGraduationYear === "" ||
+      student.graduationYear === parseInt(selectedGraduationYear);
+
+    if (isBatchSelected && isBranchSelected && isGraduationYearSelected) {
+      return (
+        <tr key={index}>
+          <td className="border p-2 text-center">{index + 1}</td>
+          <td className="border p-2 text-center">{student.fullName}</td>
+          <td className="border p-2 text-center">{student.email}</td>
+          <td className="border p-2 text-center">{student.rollNumber}</td>
+          <td className="border p-2 text-center">
+            {new Date(student.enrollmentDate).toLocaleDateString()}
+          </td>
+          <td className="border p-2 text-center">{student.contactNumber}</td>
+          <td className="border p-2 text-center">{student.branch}</td>
+          <td className="border p-2 text-center">{student.graduationType}</td>
+          <td className="border p-2 text-center">{student.graduationYear}</td>
+          <td className="border p-2 text-center">
+            <button
+              className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
+              onClick={() => disableStudent(student._id)}
+            >
+              Clear Dues
+            </button>
+          </td>
+        </tr>
+      );
+    }
+    return null;
   };
+
+  const renderFilterOptions = (options, setSelectedOption, selectedOption) => (
+    <select
+      value={selectedOption}
+      onChange={(e) => setSelectedOption(e.target.value)}
+      className="p-2 border rounded"
+    >
+      <option value="">All</option>
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  );
 
   return (
     <div>
       <h2>Student List</h2>
-      <div className='overflow-auto max-w-[82vw] max-h-[80vh]'>
-        <table className='w-full border-collapse border'>
-          <thead className='sticky top-0'>{renderHeader()}</thead>
+      <div className="flex items-center mb-4">
+        <div className="mr-2">
+          <label className="block mb-0">Batch:</label>
+          {renderFilterOptions(
+            ['btech', 'mtech', 'phd'], // Replace with actual batch options
+            setSelectedBatch,
+            selectedBatch
+          )}
+        </div>
+        <div className="mr-2">
+          <label className="block mb-0">Branch:</label>
+          {renderFilterOptions(
+             ['cse', 'csb', 'csam', 'csd', 'ece', 'csss', 'vlsi','csai'], // Replace with actual branch options
+            setSelectedBranch,
+            selectedBranch
+          )}
+        </div>
+        <div>
+          <label className="block mb-0">Graduation Year:</label>
+          {renderFilterOptions(
+            ["2023", "2024", "2025", "2026", "2027", "2028", "2029"],
+            setSelectedGraduationYear,
+            selectedGraduationYear
+          )}
+        </div>
+      </div>
+      <div className="overflow-auto max-w-[82vw] max-h-[80vh]">
+        <table className="w-full border-collapse border">
+          <thead className="sticky top-0">{renderHeader()}</thead>
           <tbody>
             {students.map((student, index) => renderRow(student, index))}
           </tbody>
