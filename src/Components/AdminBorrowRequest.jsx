@@ -181,9 +181,9 @@ const AdminBorrowRequest = ({ user }) => {
   };
 
   return (
-    <div>
-      <table className="w-full overflow-auto mt-4">
-        <thead>{renderHeader()}</thead>
+    <div className='overflow-auto max-w-[82vw] max-h-[82vh] mt-4'>
+      <table className='w-full border-collapse border'>
+        <thead className='sticky top-0'>{renderHeader()}</thead>
         <tbody>
           {requests.map((requestData, index) => renderRow(requestData, index))}
         </tbody>

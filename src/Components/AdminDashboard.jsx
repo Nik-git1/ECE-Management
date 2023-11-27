@@ -71,12 +71,14 @@ const AdminDashboard = () => {
   return (
     <div>
       <h2>Student List</h2>
-      <table className="w-full overflow-auto">
-        <thead>{renderHeader()}</thead>
-        <tbody>
-          {students.map((student, index) => renderRow(student, index))}
-        </tbody>
-      </table>
+      <div className='overflow-auto max-w-[82vw] max-h-[80vh]'>
+        <table className='w-full border-collapse border'>
+          <thead className='sticky top-0'>{renderHeader()}</thead>
+          <tbody>
+            {students.map((student, index) => renderRow(student, index))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

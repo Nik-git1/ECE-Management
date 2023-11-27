@@ -38,7 +38,7 @@ const StudentPage = () => {
     setLoading(false);
   }, []);
     return (
-        <div>
+        <div className='fixed w-full'>
         <AdminNavbar />
         <div className="flex">
           <div className="w-1/6 min-w-[300px]">

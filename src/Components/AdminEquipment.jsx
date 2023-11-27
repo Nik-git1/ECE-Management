@@ -393,7 +393,7 @@ const EquipmentTable = ({user}) => {
             Add Equipment
           </button>
         </div>
-        <div className='overflow-auto max-w-[83vw] max-h-[70vh]'>
+        <div className='overflow-auto max-w-[82vw] max-h-[75vh]'>
           <table className='w-full border-collapse border'>
             <thead className='sticky top-0'>{renderHeaderRow()}</thead>
             <tbody>

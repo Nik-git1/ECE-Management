@@ -215,25 +215,29 @@ const StudentDashBoard = ({ user }) => {
   };
 
   return (
-    <div className="overflow-auto max-w-[83vw] max-h-[1000px] mt-4">
+    <div className="mt-4">
       <div className="flex justify-center">
         <h3 className="font-bold text-3xl text-[#3dafaa]">Equiped Items</h3>
       </div>
-      <table className="w-full border-collapse border">
-        <thead className="sticky top-0">{renderEquipedHeader()}</thead>
-        <tbody>
-          {tableData.map((data, index) => renderEquipedRow(data, index))}
-        </tbody>
-      </table>
+      <div className="overflow-auto max-w-[83vw] max-h-[30vh]">
+        <table className="w-full border-collapse border">
+          <thead className="sticky top-0">{renderEquipedHeader()}</thead>
+          <tbody>
+            {tableData.map((data, index) => renderEquipedRow(data, index))}
+          </tbody>
+        </table>
+      </div>
       <div className="flex justify-center mt-8">
         <h3 className="font-bold text-3xl text-[#3dafaa]">Returned Items</h3>
       </div>
-      <table className="w-full border-collapse border">
-        <thead className="sticky top-0">{renderReturnedHeader()}</thead>
-        <tbody>
-          {returnedTable.map((data, index) => renderReturnedRow(data, index))}
-        </tbody>
-      </table>
+      <div className="overflow-auto max-w-[83vw] max-h-[30vh]">
+        <table className="w-full border-collapse border">
+          <thead className="sticky top-0">{renderReturnedHeader()}</thead>
+          <tbody>
+            {returnedTable.map((data, index) => renderReturnedRow(data, index))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

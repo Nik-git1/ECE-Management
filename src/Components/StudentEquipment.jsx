@@ -147,7 +147,7 @@ const StudentEquipment = ({ user }) => {
   
 
   return (
-    <div className="overflow-auto max-w-[83vw] max-h-[1000px] mt-4">
+    <div className=" mt-4">
       <div className="flex items-center  mb-4">
         <div className="flex items-center">
           <label className="block mb-0 mr-2">Search:</label>
@@ -263,15 +263,18 @@ const StudentEquipment = ({ user }) => {
           Lab 4
         </button>
       </div>
-      <table className="w-full border-collapse border">
-        <thead className="sticky top-0">{renderHeaderRow()}</thead>
-        <tbody>
-          {equipmentData &&
-            equipmentData.map((equipment, index) =>
-              renderRow(equipment, index)
-            )}
-        </tbody>
-      </table>
+      <div className="overflow-auto max-w-[83vw] max-h-[70vh]">
+
+        <table className="w-full border-collapse border">
+          <thead className="sticky top-0">{renderHeaderRow()}</thead>
+          <tbody>
+            {equipmentData &&
+              equipmentData.map((equipment, index) =>
+                renderRow(equipment, index)
+              )}
+          </tbody>
+        </table>
+      </div>
 
       <Modal
         isOpen={modalIsOpen}

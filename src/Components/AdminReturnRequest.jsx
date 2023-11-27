@@ -207,12 +207,14 @@ const AdminReturnRequest = ({ user }) => {
         <option value="returning">Returning</option>
         <option value="completed">Completed</option>
       </select>
-      <table className="w-full overflow-auto">
-        <thead>{renderHeader()}</thead>
-        <tbody>
-          {requests.map((requestData, index) => renderRow(requestData, index))}
-        </tbody>
-      </table>
+      <div className='overflow-auto max-w-[82vw] max-h-[82vh]'>
+        <table className='w-full border-collapse border'>
+          <thead className='sticky top-0'>{renderHeader()}</thead>
+          <tbody>
+            {requests.map((requestData, index) => renderRow(requestData, index))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
