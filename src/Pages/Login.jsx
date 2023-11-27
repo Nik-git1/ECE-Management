@@ -145,7 +145,7 @@ const LoginPage = () => {
       const json = await response.json();
       if (json.success) {
         alert("OTP verified successfully.");
-        navigate("/TAform", { state: { email } }); 
+        navigate("/Register", { state: { email } }); 
         // Redirect to the appropriate page after OTP verification
       } else {
         alert("Invalid OTP.");

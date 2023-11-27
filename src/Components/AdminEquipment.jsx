@@ -330,60 +330,57 @@ const EquipmentTable = ({user}) => {
         </button>
       </div>
       <Modal
-        isOpen={showFilterModal}
-        onRequestClose={() => setShowFilterModal(false)}
-        contentLabel="Equipment Filter Modal"
-        overlayClassName="overlay"
-      >
-        <div className="modal-content">
-          <h2 className="text-2xl font-bold mb-4">Filter Equipment Types</h2>
-          
-          {/* Checkboxes for each equipment type */}
-          <div className="mb-2">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedTypes.includes("Capacitor")}
-                onChange={() =>
-                  setSelectedTypes((prev) =>
-                    prev.includes("Capacitor")
-                      ? prev.filter((t) => t !== "Capacitor")
-                      : [...prev, "Capacitor"]
-                  )
-                }
-                className="form-checkbox h-5 w-5 text-gray-600"
-              />
-              <span className="ml-2">Capacitor</span>
-            </label>
-          </div>
-  
-          <div className="mb-2">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedTypes.includes("Resistors")}
-                onChange={() =>
-                  setSelectedTypes((prev) =>
-                    prev.includes("Resistor")
-                      ? prev.filter((t) => t !== "Resistors")
-                      : [...prev, "Resistors"]
-                  )
-                }
-                className="form-checkbox h-5 w-5 text-gray-600"
-              />
-              <span className="ml-2">Resistors</span>
-            </label>
-          </div>
-  
-        
-          <button
-            onClick={() => setShowFilterModal(false)}
-            className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-          >
-            Apply Filters
-          </button>
-        </div>
-      </Modal>
+  isOpen={showFilterModal}
+  onRequestClose={() => setShowFilterModal(false)}
+  contentLabel="Equipment Filter Modal"
+  overlayClassName="overlay"
+>
+  <div className="modal-content">
+    <h2 className="text-2xl font-bold mb-4">Filter Equipment Types</h2>
+
+    {/* Checkboxes for each equipment type */}
+    <div className="mb-2">
+      {[
+        "Capacitor",
+        "Resistors",
+        "Miscellaneous",
+        "Tools",
+        "SMD RF Resistors",
+        "Connectors/adapters",
+        "Trainer Kits",
+        "PCB Boards",
+        "Microcontroller Boards",
+        "Arduino",
+        "Sensors",
+        "Oscilloscope/Power Supply",
+      ].map((type) => (
+        <label key={type} className="inline-flex items-center">
+          <input
+            type="checkbox"
+            checked={selectedTypes.includes(type)}
+            onChange={() =>
+              setSelectedTypes((prev) =>
+                prev.includes(type)
+                  ? prev.filter((t) => t !== type)
+                  : [...prev, type]
+              )
+            }
+            className="form-checkbox h-5 w-5 text-gray-600"
+          />
+          <span className="ml-2">{type}</span>
+        </label>
+      ))}
+    </div>
+
+    <button
+      onClick={() => setShowFilterModal(false)}
+      className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+    >
+      Apply Filters
+    </button>
+  </div>
+</Modal>
+
 
         <div className='flex justify-end'>
           <button

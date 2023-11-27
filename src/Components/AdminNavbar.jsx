@@ -25,7 +25,7 @@ const AdminNavbar = () => {
       </div>
       <ul className='md:flex md:items-center'>
         <li className='mx-4'>
-          <a href="" className='text-x1 text-[#3dafaa] hover:text-black duration-500'>ABOUT</a>
+          <a href="https://ecelabs.iiitd.edu.in/"target='_blank' className='text-x1 text-[#3dafaa] hover:text-black duration-500'>ABOUT</a>
         </li>
         <li className='mx-4'>
           <a href="" className='text-x1 text-[#3dafaa] hover:text-black duration-500'>HELP</a>
