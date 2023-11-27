@@ -28,6 +28,14 @@ const Register = () => {
         e.preventDefault();
 
         try {
+            if(email === 'your email id'){
+                alert("Please generate OTP from Login page");
+                return;
+            }
+            if(formData.fullName === '' || formData.password === '' || formData.rollNumber === '' || formData.graduationType === '' || formData.branch === '' || formData.contactNumber === '' || formData.graduationYear === ''){
+                alert("Please in fill all fields");
+                return;
+            }
             const response = await fetch('http://localhost:3000/api/auth/addStudent', {
                 method: 'POST',
                 headers: {
