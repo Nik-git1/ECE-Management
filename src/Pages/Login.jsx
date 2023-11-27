@@ -112,47 +112,47 @@ const LoginPage = () => {
   };
   const handleSendOTP = async () => {
     console.log(email);
-    // if (email) {
-    //   const response = await fetch(`${host}/api/login/sendotp`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ email_id: email }),
-    //   });
+    if (email) {
+      const response = await fetch(`${host}/api/auth/sendotp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email_id: email }),
+      });
 
-    //   const json = await response.json();
-    //   if (json.success) {
-    //     setOtpSent(true);
-    //   } else {
-    //     alert("Failed to send OTP.");
-    //   }
-    // } else {
-    //   alert("Please enter an email address.");
-    // }
+      const json = await response.json();
+      if (json.success) {
+        setOtpSent(true);
+      } else {
+        alert("Failed to send OTP.");
+      }
+    } else {
+      alert("Please enter an email address.");
+    }
   };
   const handleVerifyOTP = async () => {
     console.log(Otp);
-    // if (email && Otp) {
-    //   const response = await fetch(`${host}/api/login/verifyOTP`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ email: email, enteredOTP: Otp }),
-    //   });
+    if (email && Otp) {
+      const response = await fetch(`${host}/api/auth/verifyOTP`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email, enteredOTP: Otp }),
+      });
 
-    //   const json = await response.json();
-    //   if (json.success) {
-    //     alert("OTP verified successfully.");
-    //     navigate("/TAform", { state: { email } }); 
-    //     // Redirect to the appropriate page after OTP verification
-    //   } else {
-    //     alert("Invalid OTP.");
-    //   }
-    // } else {
-    //   alert("Please enter an email and OTP.");
-    // }
+      const json = await response.json();
+      if (json.success) {
+        alert("OTP verified successfully.");
+        navigate("/TAform", { state: { email } }); 
+        // Redirect to the appropriate page after OTP verification
+      } else {
+        alert("Invalid OTP.");
+      }
+    } else {
+      alert("Please enter an email and OTP.");
+    }
   };
 
   const handleSubmit = (e) => {

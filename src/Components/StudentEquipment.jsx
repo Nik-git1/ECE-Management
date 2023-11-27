@@ -200,7 +200,7 @@ const StudentEquipment = ({ user }) => {
                 checked={selectedTypes.includes("Resistors")}
                 onChange={() =>
                   setSelectedTypes((prev) =>
-                    prev.includes("Resistor")
+                    prev.includes("Resistors")
                       ? prev.filter((t) => t !== "Resistors")
                       : [...prev, "Resistors"]
                   )
