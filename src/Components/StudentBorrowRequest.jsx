@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const StudentBorrowRequest = ({ user }) => {
+  const [loading, setLoading] = useState(true);
   const columnNames = [
     "S.No",
     "Equipment Name",
@@ -42,7 +44,7 @@ const StudentBorrowRequest = ({ user }) => {
   };
 
   useEffect(() => {
-    fetchRequestData();
+    setLoading(true); fetchRequestData();
   }, []);
 
   const fetchRequestData = async () => {
@@ -73,6 +75,7 @@ const StudentBorrowRequest = ({ user }) => {
       // Check if requestDataArray is not empty before updating the state
       // if (requestDataArray.length > 0) {
       setTableData(requestDataArray);
+      setLoading(false);
       // } else {
       //   console.error(
       //     "Error fetching requests: Request or equipments array is empty",
@@ -80,6 +83,8 @@ const StudentBorrowRequest = ({ user }) => {
       //   );
       // }
     } catch (error) {
+      setLoading(false);
+      alert(error);
       console.error("Error fetching requests:", error);
     }
   };
@@ -148,12 +153,26 @@ const StudentBorrowRequest = ({ user }) => {
   };
 
   return (
-    <div className="overflow-auto max-w-[83vw] max-h-[82vh] mt-4">
-      <table className="w-full border-collapse border">
-        <thead className="sticky top-0">{renderHeader()}</thead>
-        <tbody>{tableData.map((data, index) => renderRow(data, index))}</tbody>
-      </table>
-    </div>
+    <>
+    {loading ? (
+      <div className="flex justify-center">
+        <ClipLoader
+          color={'#3dafaa'}
+          loading={loading}
+          size={100}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    ) : (
+      <div className="overflow-auto max-w-[83vw] max-h-[82vh] mt-4">
+        <table className="w-full border-collapse border">
+          <thead className="sticky top-0">{renderHeader()}</thead>
+          <tbody>{tableData.map((data, index) => renderRow(data, index))}</tbody>
+        </table>
+      </div>
+    )}
+    </>
   );
 };
 

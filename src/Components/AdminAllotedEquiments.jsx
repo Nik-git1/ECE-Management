@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 // Import the EquipmentTable component
 
 const AdminBorrowRequest = ({ user }) => {
   const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
   const columnNames = [
     "S.No",
     "Equipment Name",
@@ -14,7 +16,7 @@ const AdminBorrowRequest = ({ user }) => {
   ];
 
   useEffect(() => {
-    fetchRequests();
+    setLoading(true); fetchRequests();
   }, []);
 
   const fetchRequests = async () => {
@@ -38,7 +40,10 @@ const AdminBorrowRequest = ({ user }) => {
       });
 
       setRequests(requestDataArray);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      alert(error);
       console.error("Error fetching requests:", error);
     }
   };
@@ -97,6 +102,17 @@ const AdminBorrowRequest = ({ user }) => {
 
   return (
     <div>
+      {loading ? (
+        <div className="flex justify-center">
+          <ClipLoader
+            color={'#3dafaa'}
+            loading={loading}
+            size={100}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>
+      ):(
       <div className='overflow-auto max-w-[82vw] max-h-[82vh] mt-4'>
         <table className='w-full border-collapse border'>
           <thead className='sticky top-0'>{renderHeader()}</thead>
@@ -105,6 +121,8 @@ const AdminBorrowRequest = ({ user }) => {
           </tbody>
         </table>
       </div>
+      )}
+      
     </div>
   );
 };

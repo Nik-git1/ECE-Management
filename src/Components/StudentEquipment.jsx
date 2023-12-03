@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const StudentEquipment = ({ user }) => {
   const [equipmentData, setEquipmentData] = useState();
@@ -12,6 +13,7 @@ const StudentEquipment = ({ user }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -57,7 +59,7 @@ const StudentEquipment = ({ user }) => {
   };
 
   useEffect(() => {
-    fetchEquipmentData();
+    setLoading(true); fetchEquipmentData();
   }, []);
 
   const fetchEquipmentData = async () => {
@@ -67,7 +69,10 @@ const StudentEquipment = ({ user }) => {
       );
       const data = await response.json();
       setEquipmentData(data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false); 
+      alert(error);
       console.error("Error fetching equipment data: ", error);
     }
   };
@@ -217,61 +222,74 @@ const StudentEquipment = ({ user }) => {
   </div>
 </Modal>
 
-
-      <div>
-        <button
-          className={`${
-            selectedLab === "lab1"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-300 text-gray-600"
-          } px-4 py-2 rounded mr-2 mb-2`}
-          onClick={() => setSelectedLab("lab1")}
-        >
-          Lab 1
-        </button>
-        <button
-          className={`${
-            selectedLab === "lab2"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-300 text-gray-600"
-          } px-4 py-2 rounded mr-2 mb-2`}
-          onClick={() => setSelectedLab("lab2")}
-        >
-          Lab 2
-        </button>
-        <button
-          className={`${
-            selectedLab === "lab3"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-300 text-gray-600"
-          } px-4 py-2 rounded mr-2 mb-2`}
-          onClick={() => setSelectedLab("lab3")}
-        >
-          Lab 3
-        </button>
-        <button
-          className={`${
-            selectedLab === "lab4"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-300 text-gray-600"
-          } px-4 py-2 rounded mb-2`}
-          onClick={() => setSelectedLab("lab4")}
-        >
-          Lab 4
-        </button>
+    {loading ? (
+      <div className="flex justify-center">
+        <ClipLoader
+          color={'#3dafaa'}
+          loading={loading}
+          size={100}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
       </div>
-      <div className="overflow-auto max-w-[83vw] max-h-[70vh]">
+    ) : (
+      <>
+        <div>
+          <button
+            className={`${
+              selectedLab === "lab1"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-300 text-gray-600"
+            } px-4 py-2 rounded mr-2 mb-2`}
+            onClick={() => setSelectedLab("lab1")}
+          >
+            Lab 1
+          </button>
+          <button
+            className={`${
+              selectedLab === "lab2"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-300 text-gray-600"
+            } px-4 py-2 rounded mr-2 mb-2`}
+            onClick={() => setSelectedLab("lab2")}
+          >
+            Lab 2
+          </button>
+          <button
+            className={`${
+              selectedLab === "lab3"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-300 text-gray-600"
+            } px-4 py-2 rounded mr-2 mb-2`}
+            onClick={() => setSelectedLab("lab3")}
+          >
+            Lab 3
+          </button>
+          <button
+            className={`${
+              selectedLab === "lab4"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-300 text-gray-600"
+            } px-4 py-2 rounded mb-2`}
+            onClick={() => setSelectedLab("lab4")}
+          >
+            Lab 4
+          </button>
+        </div>
+        <div className="overflow-auto max-w-[83vw] max-h-[70vh]">
 
-        <table className="w-full border-collapse border">
-          <thead className="sticky top-0">{renderHeaderRow()}</thead>
-          <tbody>
-            {equipmentData &&
-              equipmentData.map((equipment, index) =>
-                renderRow(equipment, index)
-              )}
-          </tbody>
-        </table>
-      </div>
+          <table className="w-full border-collapse border">
+            <thead className="sticky top-0">{renderHeaderRow()}</thead>
+            <tbody>
+              {equipmentData &&
+                equipmentData.map((equipment, index) =>
+                  renderRow(equipment, index)
+                )}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )}
 
       <Modal
         isOpen={modalIsOpen}

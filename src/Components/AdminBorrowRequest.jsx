@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const AdminBorrowRequest = ({ user }) => {
   const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
   const columnNames = [
     "S.No",
     "Equipment Name",
@@ -15,8 +17,7 @@ const AdminBorrowRequest = ({ user }) => {
   ];
 
   useEffect(() => {
-    console.log(user);
-    fetchRequests();
+    setLoading(true); fetchRequests();
   }, []);
 
   const fetchRequests = async () => {
@@ -41,7 +42,10 @@ const AdminBorrowRequest = ({ user }) => {
       });
 
       setRequests(requestDataArray);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      alert(error);
       console.error("Error fetching requests:", error);
     }
   };
@@ -181,14 +185,28 @@ const AdminBorrowRequest = ({ user }) => {
   };
 
   return (
-    <div className='overflow-auto max-w-[82vw] max-h-[82vh] mt-4'>
-      <table className='w-full border-collapse border'>
-        <thead className='sticky top-0'>{renderHeader()}</thead>
-        <tbody>
-          {requests.map((requestData, index) => renderRow(requestData, index))}
-        </tbody>
-      </table>
-    </div>
+    <>
+    {loading ? (
+      <div className="flex justify-center">
+          <ClipLoader
+            color={'#3dafaa'}
+            loading={loading}
+            size={100}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>
+    ) : (
+      <div className='overflow-auto max-w-[82vw] max-h-[82vh] mt-4'>
+        <table className='w-full border-collapse border'>
+          <thead className='sticky top-0'>{renderHeader()}</thead>
+          <tbody>
+            {requests.map((requestData, index) => renderRow(requestData, index))}
+          </tbody>
+        </table>
+      </div>
+    )}
+    </>
   );
 };
 

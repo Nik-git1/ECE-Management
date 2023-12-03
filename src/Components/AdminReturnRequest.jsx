@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const AdminReturnRequest = ({ user }) => {
   const [requests, setRequests] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("returning");
+  const [loading, setLoading] = useState(true);
 
   const columnNames = [
     "S.No",
@@ -17,7 +19,7 @@ const AdminReturnRequest = ({ user }) => {
   ];
 
   useEffect(() => {
-    fetchRequests();
+    setLoading(true); fetchRequests();
   }, [selectedStatus]);
 
   const fetchRequests = async () => {
@@ -40,7 +42,10 @@ const AdminReturnRequest = ({ user }) => {
       });
 
       setRequests(requestDataArray);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      alert(error);
       console.error("Error fetching requests:", error);
     }
   };
@@ -207,14 +212,27 @@ const AdminReturnRequest = ({ user }) => {
         <option value="returning">Returning</option>
         <option value="completed">Completed</option>
       </select>
-      <div className='overflow-auto max-w-[82vw] max-h-[82vh]'>
-        <table className='w-full border-collapse border'>
-          <thead className='sticky top-0'>{renderHeader()}</thead>
-          <tbody>
-            {requests.map((requestData, index) => renderRow(requestData, index))}
-          </tbody>
-        </table>
-      </div>
+      {loading ? (
+        <div className="flex justify-center">
+          <ClipLoader
+            color={'#3dafaa'}
+            loading={loading}
+            size={100}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+       </div>
+      ):(
+        <div className='overflow-auto max-w-[82vw] max-h-[82vh]'>
+          <table className='w-full border-collapse border'>
+            <thead className='sticky top-0'>{renderHeader()}</thead>
+            <tbody>
+              {requests.map((requestData, index) => renderRow(requestData, index))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      
     </div>
   );
 };
