@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import ClipLoader from "react-spinners/ClipLoader";
+import Modal from "react-modal";
 
 const AdminReturnRequest = ({ user }) => {
   const [requests, setRequests] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("returning");
   const [loading, setLoading] = useState(true);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [remark, setRemark] = useState('NA');
+  const [requestID, setRequestID] = useState();
 
   const columnNames = [
     "S.No",
@@ -50,6 +54,10 @@ const AdminReturnRequest = ({ user }) => {
     }
   };
 
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   const acceptAlert = (requestID) => {
     Swal.fire({
       title: "Accept the request?",
@@ -61,10 +69,16 @@ const AdminReturnRequest = ({ user }) => {
       confirmButtonText: "Accept",
     }).then((result) => {
       if (result.isConfirmed) {
-        acceptRequest(requestID);
+        setRequestID(requestID);
+        setModalIsOpen(true);
       }
     });
   };
+
+  const handleAddRemark = () => {
+    closeModal();
+    acceptRequest(requestID);
+  }
 
   const acceptRequest = async (requestID) => {
     try {
@@ -72,6 +86,10 @@ const AdminReturnRequest = ({ user }) => {
         `http://localhost:3000/api/transaction/accept/${requestID}`,
         {
           method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ remark }),
         }
       );
 
@@ -134,7 +152,7 @@ const AdminReturnRequest = ({ user }) => {
         ))}
         {selectedStatus === "returning" ? (
           <th className="border p-2 text-center">Action</th>
-        ) : null}
+        ) : <th className="border p-2 text-center">Remark</th>}
       </tr>
     );
   };
@@ -177,25 +195,29 @@ const AdminReturnRequest = ({ user }) => {
         <td className="border p-2 text-center">{request?.quantity}</td>
         <td className="border p-2 text-center">{formattedreturndate}</td>
         <td className="border p-2 text-center">{formattedReturnedOn}</td>
-        <td className="border p-2">
-          {selectedStatus === "returning" && (
-            <div className="flex justify-between">
-              <button
-                className="bg-green-500 text-white px-2 py-1 rounded-md items-center"
-                onClick={() => acceptAlert(request._id)}
-              >
-                Approve
-              </button>
+          {selectedStatus === "returning" ? (
+            <td className="border p-2">{
+              <div className="flex justify-between">
+                <button
+                  className="bg-green-500 text-white px-2 py-1 rounded-md items-center"
+                  onClick={() => acceptAlert(request._id)}
+                >
+                  Approve
+                </button>
 
-              <button
-                className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
-                onClick={() => declineAlert(request._id)}
-              >
-                Decline
-              </button>
-            </div>
+                <button
+                  className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
+                  onClick={() => declineAlert(request._id)}
+                >
+                  Decline
+                </button>
+              </div>
+              }
+            </td>
+          ) : (
+            <td className="border p-2 text-center">{request?.adminComments}</td>
           )}
-        </td>
+        
       </tr>
     );
   };
@@ -232,7 +254,40 @@ const AdminReturnRequest = ({ user }) => {
           </table>
         </div>
       )}
-      
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Equipment Request Modal"
+        // className='modal'
+        overlayClassName="overlay"
+      >
+        <div className="modal-content">
+          <h2 className="text-2xl font-bold mb-4">Add Remark?</h2>
+          <div className="mb-4">
+            <label className="block mb-2">Remark:</label>
+            <input
+              type="text"
+              value={remark}
+              onChange={(e) => setRemark(e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="flex justify-between">
+            <button
+              onClick={handleAddRemark}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Add
+            </button>
+            <button
+              onClick={handleAddRemark}
+              className="bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
