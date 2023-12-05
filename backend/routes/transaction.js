@@ -10,27 +10,18 @@ const {
   createReturnRequest,
   deleteRequest
 } = require("../controllers/transactionController");
+const transactionAuthMiddleware = require("../middleware/transactionAuth")
 
-router.delete("/requests/delete", deleteRequest);
-// Create a new equipment request (Student)
-router.post("/requests", createRequest);
+router.post("/requests",transactionAuthMiddleware, createRequest);
+router.delete("/requests/delete",transactionAuthMiddleware, deleteRequest); 
+router.get("/srequests/:studentId",transactionAuthMiddleware, getRequestByStudentIDs);
+router.post("/return",transactionAuthMiddleware, createReturnRequest);
 
-// Accept a borrow request (Admin)
 router.put("/accept/:transactionId", acceptRequest);
-
-// Decline a borrow request (Admin)
 router.put("/decline/:transactionId", declineRequest);
-
-// Confirm a borrow transaction (Admin)
 router.put("/transactions/confirm/:transactionId", confirmTransaction);
-
-// Fetch all borrow requests (Admin)
 router.get("/requests/:status/:lab", getAllRequests);
 
-// Fetch borrow requests of a student
-router.get("/srequests/:studentId", getRequestByStudentIDs);
 
-// Create a return request (Student)
-router.post("/return", createReturnRequest);
 
 module.exports = router;

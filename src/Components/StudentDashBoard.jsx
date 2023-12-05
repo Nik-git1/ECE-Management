@@ -12,12 +12,15 @@ const StudentDashBoard = ({ user }) => {
   const fetchRequestData = async () => {
     const statuses = ["accepted", "returning"]; // Use an array for multiple statuses
     const statusQueryParam = statuses.join(",");
-
+    const token= localStorage.getItem("token")
     try {
       const response = await fetch(
         `http://localhost:3000/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
         {
           method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       const data = await response.json();
@@ -38,18 +41,14 @@ const StudentDashBoard = ({ user }) => {
       // Check if requestDataArray is not empty before updating the state
       if (requestDataArray.length > 0) {
         setTableData(requestDataArray);
-      } else {
-        console.error(
-          "Error fetching requests: Request or equipments array is empty",
-          data
-        );
-      }
+      } 
     } catch (error) {
       console.error("Error fetching requests:", error);
     }
   };
 
   const sendReturnRequest = async (transactionId) => {
+    const token = localStorage.getItem("token")
     try {
       const response = await fetch(
         "http://localhost:3000/api/transaction/return",
@@ -57,6 +56,7 @@ const StudentDashBoard = ({ user }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             studentId: user.id, // Replace with the actual studentId
@@ -80,12 +80,15 @@ const StudentDashBoard = ({ user }) => {
   const returnedData = async () => {
     const statuses = ["completed"]; // Use an array for multiple statuses
     const statusQueryParam = statuses.join(",");
-
+    const token = localStorage.getItem("token")
     try {
       const response = await fetch(
         `http://localhost:3000/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
         {
           method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       const data = await response.json();

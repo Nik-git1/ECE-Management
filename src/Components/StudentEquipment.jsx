@@ -22,6 +22,7 @@ const StudentEquipment = ({ user }) => {
   };
 
   const sendRequest = async () => {
+    const token = localStorage.getItem("token")
     try {
       const response = await fetch(
         "http://localhost:3000/api/transaction/requests",
@@ -29,9 +30,9 @@ const StudentEquipment = ({ user }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            studentId: user.id, // Replace with the actual studentId
             equipmentId: request.id,
             quantity: requestedQuantity,
             daysToUse: requestedDays,
@@ -48,7 +49,11 @@ const StudentEquipment = ({ user }) => {
 
       // Handle success, you can update the UI or take other actions if needed
       console.log("Request sent successfully");
-      Swal.fire('Requested Successfully', 'Your request has been sent to the admin', 'success');
+      Swal.fire(
+        "Requested Successfully",
+        "Your request has been sent to the admin",
+        "success"
+      );
       closeModal();
     } catch (error) {
       console.error("Error sending request:", error.message);
@@ -72,10 +77,9 @@ const StudentEquipment = ({ user }) => {
     }
   };
 
- 
   const renderRow = (equipment, index) => {
-    console.log(selectedTypes)
-    const isTypeSelected = selectedTypes.length === 0 || selectedTypes.includes(equipment.type);
+    const isTypeSelected =
+      selectedTypes.length === 0 || selectedTypes.includes(equipment.type);
 
     if (
       equipment.lab === selectedLab &&
@@ -88,15 +92,17 @@ const StudentEquipment = ({ user }) => {
           <td className="border p-2">{serialNumber}</td>
           <td className="border p-2">{equipment.name}</td>
           <td className="border p-2">{equipment.descrption}</td>
-          <td className="border p-2">{equipment.link !== "" ?(
-            <div className="flex justify-center">
-              <button className='bg-blue-500 text-white px-2 py-1 rounded-md flex items-center mr-1'
-                onClick={() => window.open(equipment.link, "_blank")}
-              >
-                Link
-              </button>
-            </div>):
-            (null)}
+          <td className="border p-2">
+            {equipment.link !== "" ? (
+              <div className="flex justify-center">
+                <button
+                  className="bg-blue-500 text-white px-2 py-1 rounded-md flex items-center mr-1"
+                  onClick={() => window.open(equipment.link, "_blank")}
+                >
+                  Link
+                </button>
+              </div>
+            ) : null}
           </td>
           <td className="border p-2">{equipment.type}</td>
           <td className="border p-2">{equipment.quantity}</td>
@@ -144,7 +150,6 @@ const StudentEquipment = ({ user }) => {
   const openFilterModal = () => {
     setShowFilterModal(true);
   };
-  
 
   return (
     <div className=" mt-4">
@@ -166,57 +171,56 @@ const StudentEquipment = ({ user }) => {
         </button>
       </div>
       <Modal
-  isOpen={showFilterModal}
-  onRequestClose={() => setShowFilterModal(false)}
-  contentLabel="Equipment Filter Modal"
-  overlayClassName="overlay"
->
-  <div className="modal-content">
-    <h2 className="text-2xl font-bold mb-4">Filter Equipment Types</h2>
+        isOpen={showFilterModal}
+        onRequestClose={() => setShowFilterModal(false)}
+        contentLabel="Equipment Filter Modal"
+        overlayClassName="overlay"
+      >
+        <div className="modal-content">
+          <h2 className="text-2xl font-bold mb-4">Filter Equipment Types</h2>
 
-    {/* Checkboxes for each equipment type */}
-    <div className="mb-2">
-      {[
-        "Capacitor",
-        "Resistors",
-        "Miscellaneous",
-        "Tools",
-        "SMD RF Resistors",
-        "Connectors/adapters",
-        "Trainer Kits",
-        "PCB Boards",
-        "Microcontroller Boards",
-        "Arduino",
-        "Sensors",
-        "Oscilloscope/Power Supply",
-      ].map((type) => (
-        <label key={type} className="inline-flex items-center">
-          <input
-            type="checkbox"
-            checked={selectedTypes.includes(type)}
-            onChange={() =>
-              setSelectedTypes((prev) =>
-                prev.includes(type)
-                  ? prev.filter((t) => t !== type)
-                  : [...prev, type]
-              )
-            }
-            className="form-checkbox h-5 w-5 text-gray-600"
-          />
-          <span className="ml-2">{type}</span>
-        </label>
-      ))}
-    </div>
+          {/* Checkboxes for each equipment type */}
+          <div className="mb-2">
+            {[
+              "Capacitor",
+              "Resistors",
+              "Miscellaneous",
+              "Tools",
+              "SMD RF Resistors",
+              "Connectors/adapters",
+              "Trainer Kits",
+              "PCB Boards",
+              "Microcontroller Boards",
+              "Arduino",
+              "Sensors",
+              "Oscilloscope/Power Supply",
+            ].map((type) => (
+              <label key={type} className="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  checked={selectedTypes.includes(type)}
+                  onChange={() =>
+                    setSelectedTypes((prev) =>
+                      prev.includes(type)
+                        ? prev.filter((t) => t !== type)
+                        : [...prev, type]
+                    )
+                  }
+                  className="form-checkbox h-5 w-5 text-gray-600"
+                />
+                <span className="ml-2">{type}</span>
+              </label>
+            ))}
+          </div>
 
-    <button
-      onClick={() => setShowFilterModal(false)}
-      className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-    >
-      Apply Filters
-    </button>
-  </div>
-</Modal>
-
+          <button
+            onClick={() => setShowFilterModal(false)}
+            className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </Modal>
 
       <div>
         <button
@@ -261,7 +265,6 @@ const StudentEquipment = ({ user }) => {
         </button>
       </div>
       <div className="overflow-auto max-w-[83vw] max-h-[70vh]">
-
         <table className="w-full border-collapse border">
           <thead className="sticky top-0">{renderHeaderRow()}</thead>
           <tbody>

@@ -103,8 +103,8 @@ const requestApprovedAndDeclinedMail = asyncHandler(
 //create a borrow request
 const createRequest = async (req, res) => {
   try {
-    const { studentId, equipmentId, quantity, daysToUse, lab } = req.body;
-
+    const {  equipmentId, quantity, daysToUse, lab } = req.body;
+    const studentId= req.student
     const equipment = await Equipment.findById(equipmentId);
     if (!equipment) {
       return res.status(400).json({ error: "Equipment not found" });
@@ -144,7 +144,8 @@ const createRequest = async (req, res) => {
 
 const deleteRequest = async (req, res) => {
   try {
-    const { transactionId, userId } = req.body;
+    const { transactionId } = req.body;
+    const userId=req.student
 
     let request = await Transaction.findById(transactionId);
     console.log(request)
@@ -159,7 +160,8 @@ const deleteRequest = async (req, res) => {
     }
 
     // Check if the transaction is made by the specified user
-    if (request.student.toString() !== userId) {
+    if (request.student.toString() !== userId.toString()) {
+      // console.log(request.student.toString())
       return res.status(403).json({ error: "Unauthorized to decline this request" });
     }
     console.log(request.student.toString() !==userId)
@@ -179,6 +181,7 @@ const deleteRequest = async (req, res) => {
 
 // Accept a borrow request (Admin)
 const acceptRequest = async (req, res) => {
+  console.log("req")
   try {
     const { transactionId } = req.params;
     const request = await Transaction.findById(transactionId);
@@ -301,7 +304,7 @@ const getAllRequests = async (req, res) => {
 // Fetch borrow requests by student id and request status
 const getRequestByStudentIDs = async (req, res) => {
   try {
-    const { studentId } = req.params;
+    const studentId  = req.student;
     const { status } = req.query;
 
     // Create a base query with the student ID
@@ -338,6 +341,7 @@ const getRequestByStudentIDs = async (req, res) => {
 
 // Confirm a transaction (Admin)
 const confirmTransaction = async (req, res) => {
+  console.log("req")
   try {
     const { transactionId } = req.params;
 
@@ -369,7 +373,8 @@ const confirmTransaction = async (req, res) => {
 // Create Return request (Student)
 const createReturnRequest = async (req, res) => {
   try {
-    const { studentId, transactionId } = req.body;
+    const {  transactionId } = req.body;
+    const studentId = req.student
 
     const transaction = await Transaction.findById(transactionId);
     const equipment = await Equipment.findById(transaction.equipment);

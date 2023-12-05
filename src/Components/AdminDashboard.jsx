@@ -53,8 +53,6 @@ const AdminDashboard = () => {
   };
 
   const renderRow = (student, index) => {
-    console.log(selectedBatch)
-    console.log(student.graduationType)
     const isBatchSelected =
       selectedBatch === "" || student.graduationType === selectedBatch; 
 

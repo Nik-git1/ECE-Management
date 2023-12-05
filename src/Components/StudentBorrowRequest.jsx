@@ -15,16 +15,17 @@ const StudentBorrowRequest = ({ user }) => {
   const [tableData, setTableData] = useState([]);
 
   const deleteRequest = async (transactionId, userId) => {
-    console.log(userId);
+   const token = localStorage.getItem("token")
     try {
       const response = await fetch(
         `http://localhost:3000/api/transaction/requests/delete`,
         {
           method: "DELETE",
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ transactionId, userId }),
+          body: JSON.stringify({ transactionId }),
         }
       );
 
@@ -47,11 +48,16 @@ const StudentBorrowRequest = ({ user }) => {
 
   const fetchRequestData = async () => {
     const status = ["requested", "accepted", "declined"];
+    const token = localStorage.getItem("token")
     try {
       const response = await fetch(
         `http://localhost:3000/api/transaction/srequests/${user.id}?status=${status}`,
         {
           method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+
         }
       );
       const data = await response.json();
