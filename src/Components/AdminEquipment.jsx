@@ -13,12 +13,16 @@ const EquipmentTable = ({user}) => {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [showFilterModal, setShowFilterModal] = useState(false);
 
+
   useEffect(() => {
     fetchEquipmentData();
+
   }, []);
 
   const fetchEquipmentData = async () => {
+    
     try {
+
       const response = await fetch(`http://localhost:3000/api/equipment/equipments/${user.lab}`);
       const data = await response.json();
       setEquipmentData(data);
@@ -32,12 +36,15 @@ const EquipmentTable = ({user}) => {
   };
 
   const handleSave = async (rowIndex) => {
+    
+    const token = localStorage.getItem("token")
     try {
       const selectedEquipment = equipmentData[rowIndex];
       const response = await fetch(`http://localhost:3000/api/equipment/equipments/${selectedEquipment._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(selectedEquipment),
       });
@@ -62,9 +69,14 @@ const EquipmentTable = ({user}) => {
   };
 
   const handleDelete = async (rowIndex) => {
+    
+    const token = localStorage.getItem("token")
     const selectedEquipment = equipmentData[rowIndex];
     const response = await fetch(`http://localhost:3000/api/equipment/equipments/${selectedEquipment._id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
     fetchEquipmentData();
   };
@@ -155,12 +167,15 @@ const EquipmentTable = ({user}) => {
         Swal.fire('Error!', 'Lab could be either lab1, lab2 or lab3.', 'error');
         return;
       }
+      
+    const token = localStorage.getItem("token")
 
       // Send a POST request to the backend to add new equipment
       const response = await fetch('http://localhost:3000/api/equipment/equipments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ name, lab, description, link, quantity, allotmentDays, type }),
       });

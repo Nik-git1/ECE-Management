@@ -4,6 +4,9 @@ const Equipment = require('../models/Equipment'); // Assuming you have the Equip
 const addEquipments = async (req, res) => {
   try {
     const { name, lab, description, link, quantity, allotmentDays, type } = req.body;
+    if (lab !== req.lab) {
+      return res.status(401).json({ message: 'Unauthorized - Lab mismatch' });
+    }
     const newEquipment = new Equipment({ name, lab, description, link, quantity, allotmentDays, type });
     await newEquipment.save();
     res.status(201).json({ message: 'Equipment created successfully', equipment: newEquipment });
@@ -38,6 +41,9 @@ const updateEquipments = async (req, res) => {
   try {
     const equipmentId = req.params.id;
     const { name, lab, description, link, quantity, allotmentDays } = req.body;
+    if (lab !== req.lab) {
+      return res.status(401).json({ message: 'Unauthorized - Lab mismatch' });
+    }
     const updatedEquipment = await Equipment.findByIdAndUpdate(
       equipmentId,
       { name, lab, description, link, quantity, allotmentDays },

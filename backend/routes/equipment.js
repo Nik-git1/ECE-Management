@@ -9,10 +9,13 @@ const {
 } = require('../controllers/equipmentsController');
 const router = express.Router();
 
-router.post('/equipments', addEquipments);
+const adminAuthMiddleware =require('../middleware/adminAuth');
+
+router.post('/equipments',adminAuthMiddleware, addEquipments);
 router.get('/equipments',getAllEquipments);
 router.get('/equipments/:labName', getEquipmentsByLab);
-router.route('/equipments/:id').put(updateEquipments).delete(deleteEquipments);
+router.put('/equipments/:id', adminAuthMiddleware, updateEquipments);
+router.delete('/equipments/:id', adminAuthMiddleware, deleteEquipments);
 
 
 module.exports = router;
