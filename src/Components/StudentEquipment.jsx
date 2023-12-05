@@ -24,7 +24,7 @@ const StudentEquipment = ({ user }) => {
   };
 
   const sendRequest = async () => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch(
         "http://localhost:3000/api/transaction/requests",
@@ -64,7 +64,8 @@ const StudentEquipment = ({ user }) => {
   };
 
   useEffect(() => {
-    setLoading(true); fetchEquipmentData();
+    setLoading(true);
+    fetchEquipmentData();
   }, []);
 
   const fetchEquipmentData = async () => {
@@ -76,7 +77,7 @@ const StudentEquipment = ({ user }) => {
       setEquipmentData(data);
       setLoading(false);
     } catch (error) {
-      setLoading(false); 
+      setLoading(false);
       alert(error);
       console.error("Error fetching equipment data: ", error);
     }
@@ -89,7 +90,7 @@ const StudentEquipment = ({ user }) => {
     if (
       equipment.lab === selectedLab &&
       equipment.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      isTypeSelected // if it is inclueded in that list
+      isTypeSelected
     ) {
       const serialNumber = index + 1;
       return (
@@ -183,8 +184,6 @@ const StudentEquipment = ({ user }) => {
       >
         <div className="modal-content">
           <h2 className="text-2xl font-bold mb-4">Filter Equipment Types</h2>
-
-          {/* Checkboxes for each equipment type */}
           <div className="mb-2">
             {[
               "Capacitor",
@@ -217,80 +216,79 @@ const StudentEquipment = ({ user }) => {
               </label>
             ))}
           </div>
-    {loading ? (
-      <div className="flex justify-center">
-        <ClipLoader
-          color={'#3dafaa'}
-          loading={loading}
-          size={100}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-      </div>
-    ) : (
-      <div>
+        </div>
+      </Modal>
+      {loading ? (
+        <div className="flex justify-center">
+          <ClipLoader
+            color={'#3dafaa'}
+            loading={loading}
+            size={100}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>
+      ) : (
         <div>
-          <button
-            className={`${
-              selectedLab === "lab1"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-300 text-gray-600"
-            } px-4 py-2 rounded mr-2 mb-2`}
-            onClick={() => setSelectedLab("lab1")}
-          >
-            Lab 1
-          </button>
-          <button
-            className={`${
-              selectedLab === "lab2"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-300 text-gray-600"
-            } px-4 py-2 rounded mr-2 mb-2`}
-            onClick={() => setSelectedLab("lab2")}
-          >
-            Lab 2
-          </button>
-          <button
-            className={`${
-              selectedLab === "lab3"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-300 text-gray-600"
-            } px-4 py-2 rounded mr-2 mb-2`}
-            onClick={() => setSelectedLab("lab3")}
-          >
-            Lab 3
-          </button>
-          <button
-            className={`${
-              selectedLab === "lab4"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-300 text-gray-600"
-            } px-4 py-2 rounded mb-2`}
-            onClick={() => setSelectedLab("lab4")}
-          >
-            Lab 4
-          </button>
+          <div>
+            <button
+              className={`${
+                selectedLab === "lab1"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300 text-gray-600"
+              } px-4 py-2 rounded mr-2 mb-2`}
+              onClick={() => setSelectedLab("lab1")}
+            >
+              Lab 1
+            </button>
+            <button
+              className={`${
+                selectedLab === "lab2"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300 text-gray-600"
+              } px-4 py-2 rounded mr-2 mb-2`}
+              onClick={() => setSelectedLab("lab2")}
+            >
+              Lab 2
+            </button>
+            <button
+              className={`${
+                selectedLab === "lab3"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300 text-gray-600"
+              } px-4 py-2 rounded mr-2 mb-2`}
+              onClick={() => setSelectedLab("lab3")}
+            >
+              Lab 3
+            </button>
+            <button
+              className={`${
+                selectedLab === "lab4"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300 text-gray-600"
+              } px-4 py-2 rounded mb-2`}
+              onClick={() => setSelectedLab("lab4")}
+            >
+              Lab 4
+            </button>
+          </div>
+          <div className="overflow-auto max-w-[83vw] max-h-[70vh]">
+            <table className="w-full border-collapse border">
+              <thead className="sticky top-0">{renderHeaderRow()}</thead>
+              <tbody>
+                {equipmentData &&
+                  equipmentData.map((equipment, index) =>
+                    renderRow(equipment, index)
+                  )}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div className="overflow-auto max-w-[83vw] max-h-[70vh]">
-
-          <table className="w-full border-collapse border">
-            <thead className="sticky top-0">{renderHeaderRow()}</thead>
-            <tbody>
-              {equipmentData &&
-                equipmentData.map((equipment, index) =>
-                  renderRow(equipment, index)
-                )}
-            </tbody>
-          </table>
-        </div>
-      </>
-    )}
-
+      )}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Equipment Request Modal"
-        // className='modal'
         overlayClassName="overlay"
       >
         <div className="modal-content">
