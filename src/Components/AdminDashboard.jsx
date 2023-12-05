@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const AdminDashboard = () => {
   const [students, setStudents] = useState([]);
   const [selectedBatch, setSelectedBatch] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedGraduationYear, setSelectedGraduationYear] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch all students from the API
-    fetchStudents();
+    setLoading(true); fetchStudents();
   }, []);
 
   const fetchStudents = async () => {
@@ -21,7 +23,10 @@ const AdminDashboard = () => {
       } else {
         console.error("Error fetching students:", data.message);
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      alert(error);
       console.error("Error fetching students:", error);
     }
   };
@@ -106,43 +111,57 @@ const AdminDashboard = () => {
   );
 
   return (
-    <div>
-      <h2>Student List</h2>
-      <div className="flex items-center mb-4">
-        <div className="mr-2">
-          <label className="block mb-0">Batch:</label>
-          {renderFilterOptions(
-            ['btech', 'mtech', 'phd'], // Replace with actual batch options
-            setSelectedBatch,
-            selectedBatch
-          )}
+    <>
+    {loading ? (
+      <div className="flex justify-center">
+        <ClipLoader
+          color={'#3dafaa'}
+          loading={loading}
+          size={100}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    ) : (
+      <div>
+        <h2>Student List</h2>
+        <div className="flex items-center mb-4">
+          <div className="mr-2">
+            <label className="block mb-0">Batch:</label>
+            {renderFilterOptions(
+              ['btech', 'mtech', 'phd'], // Replace with actual batch options
+              setSelectedBatch,
+              selectedBatch
+            )}
+          </div>
+          <div className="mr-2">
+            <label className="block mb-0">Branch:</label>
+            {renderFilterOptions(
+              ['cse', 'csb', 'csam', 'csd', 'ece', 'csss', 'vlsi','csai'], // Replace with actual branch options
+              setSelectedBranch,
+              selectedBranch
+            )}
+          </div>
+          <div>
+            <label className="block mb-0">Graduation Year:</label>
+            {renderFilterOptions(
+              ["2023", "2024", "2025", "2026", "2027", "2028", "2029"],
+              setSelectedGraduationYear,
+              selectedGraduationYear
+            )}
+          </div>
         </div>
-        <div className="mr-2">
-          <label className="block mb-0">Branch:</label>
-          {renderFilterOptions(
-             ['cse', 'csb', 'csam', 'csd', 'ece', 'csss', 'vlsi','csai'], // Replace with actual branch options
-            setSelectedBranch,
-            selectedBranch
-          )}
-        </div>
-        <div>
-          <label className="block mb-0">Graduation Year:</label>
-          {renderFilterOptions(
-            ["2023", "2024", "2025", "2026", "2027", "2028", "2029"],
-            setSelectedGraduationYear,
-            selectedGraduationYear
-          )}
+        <div className="overflow-auto max-w-[82vw] max-h-[80vh]">
+          <table className="w-full border-collapse border">
+            <thead className="sticky top-0">{renderHeader()}</thead>
+            <tbody>
+              {students.map((student, index) => renderRow(student, index))}
+            </tbody>
+          </table>
         </div>
       </div>
-      <div className="overflow-auto max-w-[82vw] max-h-[80vh]">
-        <table className="w-full border-collapse border">
-          <thead className="sticky top-0">{renderHeader()}</thead>
-          <tbody>
-            {students.map((student, index) => renderRow(student, index))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    )}
+    </>
   );
 };
 

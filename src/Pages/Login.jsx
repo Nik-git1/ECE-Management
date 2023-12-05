@@ -145,7 +145,7 @@ const LoginPage = () => {
       const json = await response.json();
       if (json.success) {
         alert("OTP verified successfully.");
-        navigate("/Register", { state: { email } }); 
+        navigate("/register", { state: { email } }); 
         // Redirect to the appropriate page after OTP verification
       } else {
         alert("Invalid OTP.");
@@ -201,6 +201,7 @@ const LoginPage = () => {
             <button
               className="w-full my-2 py-2 bg-[#3dafaa] shadow-lg shadow-[#3dafaa]/50 hover:shadow-[#3dafaa]/40 text-white font-semibold rounded-lg"
               onClick={() => handleLoginOptionClick("Register")}
+              type="button"
             >
               Register Student
             </button>
@@ -217,6 +218,7 @@ const LoginPage = () => {
                   : "border-[#3dafaa] hover:bg-[#3dafaa] hover:text-white"
               } outline-none focus:border-[#3dafaa]`}
               onClick={() => handleLoginOptionClick("admin")}
+              type="button"
             >
               Admin
             </button>
@@ -227,6 +229,7 @@ const LoginPage = () => {
                   : "border-[#3dafaa] hover:bg-[#3dafaa] hover:text-white mx-1"
               } outline-none focus:border-[#3dafaa]`}
               onClick={() => handleLoginOptionClick("student")}
+              type="button"
             >
               Student
             </button>

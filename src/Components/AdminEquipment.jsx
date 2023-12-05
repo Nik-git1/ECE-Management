@@ -5,6 +5,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { PiCheckBold } from 'react-icons/pi';
 import Swal from 'sweetalert2';
 import Modal from "react-modal";
+import ClipLoader from "react-spinners/ClipLoader";
 const EquipmentTable = ({user}) => {
   const [equipmentData, setEquipmentData] = useState([]);
   const [editingRow, setEditingRow] = useState(-1);
@@ -12,11 +13,11 @@ const EquipmentTable = ({user}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
-    fetchEquipmentData();
-
+    setLoading(true); fetchEquipmentData();
   }, []);
 
   const fetchEquipmentData = async () => {
@@ -26,7 +27,10 @@ const EquipmentTable = ({user}) => {
       const response = await fetch(`http://localhost:3000/api/equipment/equipments/${user.lab}`);
       const data = await response.json();
       setEquipmentData(data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      alert(error);
       console.error('Error fetching equipment data: ', error);
     }
   };
@@ -396,24 +400,37 @@ const EquipmentTable = ({user}) => {
   </div>
 </Modal>
 
-
-        <div className='flex justify-end'>
-          <button
-            className='rounded-full bg-[#3dafaa] text-white border-2 border-[#3dafaa] py-1 px-3 mt-2 mb-1 mr-1 hover:bg-white hover:text-[#3dafaa]'
-            onClick={handleAddEquipment}
-          >
-            Add Equipment
-          </button>
+      {loading ? (
+        <div className="flex justify-center">
+          <ClipLoader
+            color={'#3dafaa'}
+            loading={loading}
+            size={100}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
         </div>
-        <div className='overflow-auto max-w-[82vw] max-h-[75vh]'>
-          <table className='w-full border-collapse border'>
-            <thead className='sticky top-0'>{renderHeaderRow()}</thead>
-            <tbody>
-              {addingEquipment && renderAddRow()}
-              {equipmentData.map((equipment, index) => renderRow(equipment, index))}
-            </tbody>
-          </table>
-        </div>
+      ) : (
+        <>
+          <div className='flex justify-end'>
+            <button
+              className='rounded-full bg-[#3dafaa] text-white border-2 border-[#3dafaa] py-1 px-3 mt-2 mb-1 mr-1 hover:bg-white hover:text-[#3dafaa]'
+              onClick={handleAddEquipment}
+            >
+              Add Equipment
+            </button>
+          </div>
+          <div className='overflow-auto max-w-[82vw] max-h-[75vh]'>
+            <table className='w-full border-collapse border'>
+              <thead className='sticky top-0'>{renderHeaderRow()}</thead>
+              <tbody>
+                {addingEquipment && renderAddRow()}
+                {equipmentData.map((equipment, index) => renderRow(equipment, index))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
       </div>
     </div>
   );

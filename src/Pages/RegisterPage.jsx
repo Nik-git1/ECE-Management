@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
+import { useLocation } from "react-router-dom";
 
 const Register = () => {
+    const location = useLocation();
+    const email = location.state?.email || 'your email id';
+    console.log(email);
     const [formData, setFormData] = useState({
         fullName: '',
-        email: '',
+        email: email,
         password: '',
         rollNumber: '',
-        graduation_type: '',
-        contactNumber: ''
+        graduationType: '',
+        branch: '',
+        contactNumber: '',
+        graduationYear: ''
     });
 
     const handleChange = (e) => {
@@ -22,6 +28,14 @@ const Register = () => {
         e.preventDefault();
 
         try {
+            if(email === 'your email id'){
+                alert("Please generate OTP from Login page");
+                return;
+            }
+            if(formData.fullName === '' || formData.password === '' || formData.rollNumber === '' || formData.graduationType === '' || formData.branch === '' || formData.contactNumber === '' || formData.graduationYear === ''){
+                alert("Please in fill all fields");
+                return;
+            }
             const response = await fetch('http://localhost:3000/api/auth/addStudent', {
                 method: 'POST',
                 headers: {
@@ -39,11 +53,13 @@ const Register = () => {
                 // Reset the form fields
                 setFormData({
                     fullName: '',
-                    email: '',
+                    email: 'your email id',
                     password: '',
                     rollNumber: '',
-                    graduation_type: '',
-                    contactNumber: ''
+                    graduationType: '',
+                    branch: '',
+                    contactNumber: '',
+                    graduationYear: ''
                 });
             }
         } catch (error) {
@@ -56,6 +72,20 @@ const Register = () => {
             <form onSubmit={handleSubmit} className='bg-gray-200 p-6 rounded shadow-md boder-2 border-black'>
                 <h2 className='text-2xl mb-4'>Register</h2>
                 <div className='mb-4'>
+                    <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='email'>
+                        Email
+                    </label>
+                    <input
+                        type='email'
+                        id='email'
+                        name='email'
+                        value={email}
+                        onChange={handleChange}
+                        className='p-2 border rounded'
+                        disabled
+                    />
+                </div>
+                <div className='mb-4'>
                     <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='fullName'>
                         Full Name
                     </label>
@@ -64,20 +94,6 @@ const Register = () => {
                         id='fullName'
                         name='fullName'
                         value={formData.fullName}
-                        onChange={handleChange}
-                        className='p-2 border rounded'
-                        required
-                    />
-                </div>
-                <div className='mb-4'>
-                    <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='email'>
-                        Email
-                    </label>
-                    <input
-                        type='email'
-                        id='email'
-                        name='email'
-                        value={formData.email}
                         onChange={handleChange}
                         className='p-2 border rounded'
                         required
@@ -112,14 +128,55 @@ const Register = () => {
                     />
                 </div>
                 <div className='mb-4'>
-                    <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='graduation_type'>
+                    <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='graduationType'>
                         Graduation Type
                     </label>
+                    <select
+                        id='graduationType'
+                        name='graduationType'
+                        value={formData.graduationType}
+                        onChange={handleChange}
+                        className='p-2 border rounded'
+                        required
+                    >
+                        <option value=''>Select Graduation Type</option>
+                        <option value='btech'>B.Tech</option>
+                        <option value='mtech'>M.Tech</option>
+                        <option value='phd'>PhD</option>
+                    </select>
+                </div>
+                <div className='mb-4'>
+                    <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='branch'>
+                        Branch
+                    </label>
+                    <select
+                        id='branch'
+                        name='branch'
+                        value={formData.branch}
+                        onChange={handleChange}
+                        className='p-2 border rounded'
+                        required
+                    >
+                        <option value=''>Select Branch</option>
+                        <option value='cse'>CSE</option>
+                        <option value='csb'>CSB</option>
+                        <option value='csam'>CSAM</option>
+                        <option value='csd'>CSD</option>
+                        <option value='csai'>CSAI</option>
+                        <option value='ece'>ECE</option>
+                        <option value='csss'>CSSS</option>
+                        <option value='vlsi'>VLSI</option>
+                    </select>
+                </div>
+                <div className='mb-4'>
+                    <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='graduationYear'>
+                        Graduation Year
+                    </label>
                     <input
-                        type='text'
-                        id='graduation_type'
-                        name='graduation_type'
-                        value={formData.graduation_type}
+                        type='number'
+                        id='graduationYear'
+                        name='graduationYear'
+                        value={formData.graduationYear}
                         onChange={handleChange}
                         className='p-2 border rounded'
                         required

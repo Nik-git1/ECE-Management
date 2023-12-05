@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const StudentDashBoard = ({ user }) => {
   const [tableData, setTableData] = useState([]);
   const [returnedTable, setReturnedTable] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchRequestData();
+    setLoading(true); fetchRequestData();
     returnedData();
   }, []);
 
@@ -43,6 +45,8 @@ const StudentDashBoard = ({ user }) => {
         setTableData(requestDataArray);
       } 
     } catch (error) {
+      setLoading(false);
+      alert(error);
       console.error("Error fetching requests:", error);
     }
   };
@@ -115,7 +119,10 @@ const StudentDashBoard = ({ user }) => {
           data
         );
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      alert(error);
       console.error("Error fetching requests:", error);
     }
   };
@@ -218,30 +225,44 @@ const StudentDashBoard = ({ user }) => {
   };
 
   return (
-    <div className="mt-4">
+    <>
+    {loading ? (
       <div className="flex justify-center">
-        <h3 className="font-bold text-3xl text-[#3dafaa]">Equiped Items</h3>
+        <ClipLoader
+          color={'#3dafaa'}
+          loading={loading}
+          size={100}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
       </div>
-      <div className="overflow-auto max-w-[83vw] max-h-[30vh]">
-        <table className="w-full border-collapse border">
-          <thead className="sticky top-0">{renderEquipedHeader()}</thead>
-          <tbody>
-            {tableData.map((data, index) => renderEquipedRow(data, index))}
-          </tbody>
-        </table>
+    ) : (
+      <div className="mt-4">
+        <div className="flex justify-center">
+          <h3 className="font-bold text-3xl text-[#3dafaa]">Equiped Items</h3>
+        </div>
+        <div className="overflow-auto max-w-[83vw] max-h-[30vh]">
+          <table className="w-full border-collapse border">
+            <thead className="sticky top-0">{renderEquipedHeader()}</thead>
+            <tbody>
+              {tableData.map((data, index) => renderEquipedRow(data, index))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex justify-center mt-8">
+          <h3 className="font-bold text-3xl text-[#3dafaa]">Returned Items</h3>
+        </div>
+        <div className="overflow-auto max-w-[83vw] max-h-[30vh]">
+          <table className="w-full border-collapse border">
+            <thead className="sticky top-0">{renderReturnedHeader()}</thead>
+            <tbody>
+              {returnedTable.map((data, index) => renderReturnedRow(data, index))}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div className="flex justify-center mt-8">
-        <h3 className="font-bold text-3xl text-[#3dafaa]">Returned Items</h3>
-      </div>
-      <div className="overflow-auto max-w-[83vw] max-h-[30vh]">
-        <table className="w-full border-collapse border">
-          <thead className="sticky top-0">{renderReturnedHeader()}</thead>
-          <tbody>
-            {returnedTable.map((data, index) => renderReturnedRow(data, index))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    )}
+    </>
   );
 };
 

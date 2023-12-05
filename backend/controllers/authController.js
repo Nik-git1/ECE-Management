@@ -136,7 +136,7 @@ const studentLogin = async (req, res) => {
   const student = await Student.findOne({ email });
 
   if (!student) {
-    return res.staturss(401).json({ message: 'Student not found' });
+    return res.status(401).json({ message: 'Student not found' });
   }
 
   const validPassword = await argon2.verify(student.password, password);

@@ -184,6 +184,7 @@ const acceptRequest = async (req, res) => {
   console.log("req")
   try {
     const { transactionId } = req.params;
+    const {remark} = req.body;
     const request = await Transaction.findById(transactionId);
     const student = await Student.findById(request.student);
     const equipment = await Equipment.findById(request.equipment);
@@ -208,6 +209,7 @@ const acceptRequest = async (req, res) => {
     else{
       request.status = "completed";
       equipment.quantity += request.quantity;
+      request.adminComments = remark;
 
       await Promise.all([request.save(), equipment.save()]);
       requestApprovedAndDeclinedMail("arnavkumarpalia27@gmail.com", student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "return", "Approval");
