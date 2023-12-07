@@ -1,7 +1,8 @@
-import React, { useState ,useContext} from "react";
+import React, { useState ,useContext ,useEffect} from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import {jwtDecode }from 'jwt-decode'; 
 import AuthContext from '../Context/AuthContext';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const LoginPage = () => {
   const [selectedOption, setSelectedOption] = useState("");
@@ -14,6 +15,19 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const host = "http://localhost:3000";
   const {login} = useContext(AuthContext);
+  const [loading, setLoading] = useState();
+
+  const startLoader = () => {
+    setLoading(true);
+  };
+
+  const stopLoader = () => {
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    startLoader(); stopLoader();
+  }, []);
 
   const handleLoginOptionClick = (option) => {
     if (option === "Register") {
@@ -60,7 +74,7 @@ const LoginPage = () => {
         login(userData);
         navigate('/admin');
       } else {
-        alert('Login Error');
+        alert('Invalid Credentials');
       }
     } else {
       alert("Please fill in both email and password fields.");
@@ -95,7 +109,7 @@ const LoginPage = () => {
         login(userData);
         navigate('/student');
       } else {
-        alert('Login Error');
+        alert('Invalid Credentials');
       }
     } else {
       alert("Please fill in both email and password fields.");
@@ -113,6 +127,7 @@ const LoginPage = () => {
   const handleSendOTP = async () => {
     console.log(email);
     if (email) {
+      startLoader();
       const response = await fetch(`${host}/api/auth/sendotp`, {
         method: "POST",
         headers: {
@@ -124,7 +139,11 @@ const LoginPage = () => {
       const json = await response.json();
       if (json.success) {
         setOtpSent(true);
+        setTimeout(() => {
+          stopLoader();
+        }, 1500);
       } else {
+        stopLoader();
         alert("Failed to send OTP.");
       }
     } else {
@@ -180,28 +199,28 @@ const LoginPage = () => {
   return (
     <div className="h-screen w-full flex justify-center items-center relative">
       <img
-        src="./images/iiitdrndblock2.jpeg"
+        src="/Images/iiitdrndblock2.jpeg"
         className="h-full w-auto object-contain filter blur-sm absolute inset-0"
         alt="Sample image"
       />
-      <div className="place-content-center relative z-10 flex flex-col justify-center">
+      <div className="place-content-center relative z-10 flex flex-col justify-center w-[350px]">
         <form
           className="max-w-[700px] w-full mx-auto bg-white p-8 px-8 rounded-lg"
           onSubmit={handleSubmit}
         >
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center">
             <img
-              src="./images/iiitd_img.png"
-              className="max-w-[200px]"
-              alt=""
+              src="/Images/ECE_logo_header_new.png"
+              className='h-20 inline'
+              alt="Sample image"
             />
           </div>
-          <p className="text-gray-600 text-xs mt-2">For students:</p>
           <div>
             <button
               className="w-full my-2 py-2 bg-[#3dafaa] shadow-lg shadow-[#3dafaa]/50 hover:shadow-[#3dafaa]/40 text-white font-semibold rounded-lg"
               onClick={() => handleLoginOptionClick("Register")}
               type="button"
+              disabled={OtpSent}
             >
               Register Student
             </button>
@@ -210,7 +229,7 @@ const LoginPage = () => {
           <>
           <hr className="border-2 border-[#7d7f7f]" />
           <p className="text-gray-600 text-xs mt-2">Log in as:</p>
-          <div className="flex-auto mt-1">
+          <div className="flex mt-1 justify-around">
             <button
               className={`px-4 py-2 rounded-full cursor-pointer border ${
                 selectedOption === "admin"
@@ -226,7 +245,7 @@ const LoginPage = () => {
               className={`px-4 py-2 rounded-full cursor-pointer border ${
                 selectedOption === "student"
                   ? "bg-[#3dafaa] text-white"
-                  : "border-[#3dafaa] hover:bg-[#3dafaa] hover:text-white mx-1"
+                  : "border-[#3dafaa] hover:bg-[#3dafaa] hover:text-white"
               } outline-none focus:border-[#3dafaa]`}
               onClick={() => handleLoginOptionClick("student")}
               type="button"
@@ -238,6 +257,17 @@ const LoginPage = () => {
           <div className="justify-center items-center"></div>
 
           {!OtpSent ? (
+            loading ? (
+              <div className="flex justify-center">
+                <ClipLoader
+                  color={'#3dafaa'}
+                  loading={loading}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </div>
+            ) : (
             <div className="flex flex-col text-black py-2">
               <label>Email Id</label>
               <input
@@ -247,7 +277,7 @@ const LoginPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-          ) : (
+          )) : (
             <div className="flex flex-col text-black py-2">
               <label>Enter Otp</label>
               <input

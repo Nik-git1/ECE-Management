@@ -331,7 +331,7 @@ const EquipmentTable = ({user}) => {
     // <div className=''>
       <div className=''>
       <div >
-      <div className="flex items-center  mb-4">
+      <div className="flex items-center  my-2">
         <div className="flex items-center">
           <label className="block mb-0 mr-2">Search:</label>
           <input

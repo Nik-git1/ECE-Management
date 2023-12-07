@@ -23,7 +23,7 @@ const transactionAuthMiddleware = async (req, res, next) => {
     const student = await Student.findOne({ _id: decodedToken.id });
 
     // If admin not found, return 401 Unauthorized
-    if (!Student) {
+    if (!student) {
       return res.status(401).json({ message: 'Unauthorized - Invalid Student credentials' });
     }
     // Attach admin details to the request for further processing

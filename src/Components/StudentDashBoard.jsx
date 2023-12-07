@@ -5,11 +5,13 @@ const StudentDashBoard = ({ user }) => {
   const [tableData, setTableData] = useState([]);
   const [returnedTable, setReturnedTable] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [returnButtonLoader, setReturnButtonLoader] = useState(false);
 
   useEffect(() => {
     setLoading(true); fetchRequestData();
     returnedData();
   }, []);
+
 
   const fetchRequestData = async () => {
     const statuses = ["accepted", "returning"]; // Use an array for multiple statuses
@@ -54,6 +56,7 @@ const StudentDashBoard = ({ user }) => {
   const sendReturnRequest = async (transactionId) => {
     const token = localStorage.getItem("token")
     try {
+      setReturnButtonLoader(true);
       const response = await fetch(
         "http://localhost:3000/api/transaction/return",
         {
@@ -75,6 +78,9 @@ const StudentDashBoard = ({ user }) => {
         throw new Error(errorData.error);
       }
       fetchRequestData();
+      setTimeout(() => {
+        setReturnButtonLoader(false);
+      }, 1500);
     } catch (error) {
       console.error("Error sending request:", error.message);
       // Handle the error, show a notification, or take other actions as needed
@@ -155,28 +161,40 @@ const StudentDashBoard = ({ user }) => {
     );
 
     return (
-      <tr className="text-center" key={index}>
-        <td className="border p-2">{index + 1}</td>
-        <td className="border p-2">{equipment.name}</td>
-        <td className="border p-2">{request.lab}</td>
-        <td className="border p-2">{request.quantity}</td>
-        <td className="border p-2">{formattedReturnedOn}</td>
-        <td className="border p-2">
-          <div className="flex items-center justify-center">
-            {request.status === "returning" ? (
-              <span className="text-yellow-500">Waiting for Approval</span>
-            ) : (
-              <button
-                className="bg-yellow-500 text-white px-2 py-1 rounded-md flex items-center mr-1"
-                onClick={() => sendReturnRequest(request._id)}
-              >
-                Return
-              </button>
-            )}
-          </div>
-        </td>
-      </tr>
-    );
+      returnButtonLoader ? (
+        <div className="flex justify-center">
+          <ClipLoader
+            color={'#3dafaa'}
+            loading={loading}
+            size={100}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>
+      ) : (
+        <tr className="text-center" key={index}>
+          <td className="border p-2">{index + 1}</td>
+          <td className="border p-2">{equipment.name}</td>
+          <td className="border p-2">{request.lab}</td>
+          <td className="border p-2">{request.quantity}</td>
+          <td className="border p-2">{formattedReturnedOn}</td>
+          <td className="border p-2">
+            <div className="flex items-center justify-center">
+              {request.status === "returning" ? (
+                <span className="text-yellow-500">Waiting for Approval</span>
+              ) : (
+                <button
+                  className="bg-yellow-500 text-white px-2 py-1 rounded-md flex items-center mr-1"
+                  onClick={() => sendReturnRequest(request._id)}
+                >
+                  Return
+                </button>
+              )}
+            </div>
+          </td>
+        </tr>
+      )
+    );    
   };
 
   const renderReturnedRow = (data, index) => {

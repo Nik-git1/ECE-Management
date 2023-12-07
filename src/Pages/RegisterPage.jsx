@@ -69,8 +69,15 @@ const Register = () => {
 
     return (
         <div className='flex justify-center items-center '>
-            <form onSubmit={handleSubmit} className='bg-gray-200 p-6 rounded shadow-md boder-2 border-black'>
-                <h2 className='text-2xl mb-4'>Register</h2>
+            <img
+                src="/Images/iiitdrndblock2.jpeg"
+                className="h-full w-auto object-contain filter blur-sm absolute inset-0"
+                alt="Sample image"
+            />
+            <form onSubmit={handleSubmit} className='bg-white px-6 rounded shadow-md boder-2 border-black z-10 overflow-auto max-h-[95vh] mt-5'>
+                <div className='flex justify-center sticky top-0 bg-white py-2'>
+                    <h2 className='text-2xl text-[#3dafaa] mb-4 font-bold'>Register</h2>
+                </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='email'>
                         Email
@@ -196,12 +203,14 @@ const Register = () => {
                         required
                     />
                 </div>
-                <button
-                    type='submit'
-                    className="w-full my-5 py-2 bg-[#3dafaa] shadow-lg shadow-[#3dafaa]/50 hover:shadow-[#3dafaa]/40 text-white font-semibold rounded-lg"
-                >
-                    Register
-                </button>
+                <div className='flex justify-center py-4'>
+                    <button
+                        type='submit'
+                        className="w-full py-2 bg-[#3dafaa] shadow-lg shadow-[#3dafaa]/50 hover:shadow-[#3dafaa]/40 text-white font-semibold rounded-lg"
+                    >
+                        Register
+                    </button>
+                </div>
             </form>
         </div>
     );
