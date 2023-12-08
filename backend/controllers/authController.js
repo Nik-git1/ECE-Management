@@ -235,7 +235,7 @@ const forgotPassword = async(req, res) => {
     const hashedPassword = await argon2.hash(password);
     student.password = hashedPassword;
     await student.save();
-
+    res.status(200).json({success:true, message:"password updated successfully"});
   } catch (error) {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }

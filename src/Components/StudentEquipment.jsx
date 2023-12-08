@@ -14,6 +14,7 @@ const StudentEquipment = ({ user }) => {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [additionInfo, setAdditionalInfo] = useState("NA");
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -39,6 +40,7 @@ const StudentEquipment = ({ user }) => {
             quantity: requestedQuantity,
             daysToUse: requestedDays,
             lab: selectedLab,
+            adminComments: additionInfo,
           }),
         }
       );
@@ -308,6 +310,15 @@ const StudentEquipment = ({ user }) => {
               type="number"
               value={requestedDays}
               onChange={(e) => setRequestedDays(e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">Any Additional info (Optional)</label>
+            <input
+              type="text"
+              value={additionInfo}
+              onChange={(e) => setAdditionalInfo(e.target.value)}
               className="w-full p-2 border rounded"
             />
           </div>

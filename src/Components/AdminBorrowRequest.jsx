@@ -13,6 +13,7 @@ const AdminBorrowRequest = ({ user }) => {
     "Request Date",
     "Quantity",
     "Return Date",
+    "Aditional Info",
     "Action",
   ];
 
@@ -163,6 +164,7 @@ const AdminBorrowRequest = ({ user }) => {
         <td className="border p-2 text-center">{formattedstartDate}</td>
         <td className="border p-2 text-center">{request?.quantity}</td>
         <td className="border p-2 text-center">{formattedreturndate}</td>
+        <td className="border p-2 text-center">{request?.adminComments}</td>
         <td className="border p-2">
           <div className="flex justify-between">
             <button

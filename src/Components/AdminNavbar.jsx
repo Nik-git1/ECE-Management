@@ -12,6 +12,12 @@ const AdminNavbar = () => {
   // else{
   //   setNAvBarURL('/admin/equipment')
   // }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.replace("http://localhost:5173");
+  };
+
   return (
     <nav className="bg-white p-5 shadow md:flex md:items-center md:justify-between">
       
@@ -27,10 +33,11 @@ const AdminNavbar = () => {
         <li className='mx-4'>
           <a href="https://ecelabs.iiitd.edu.in/"target='_blank' className='text-x1 text-[#3dafaa] hover:text-black duration-500'>ABOUT</a>
         </li>
-        <li className='mx-4'>
-          <a href="" className='text-x1 text-[#3dafaa] hover:text-black duration-500'>HELP</a>
-        </li>
-        <button className='rounded-full bg-[#3dafaa] text-white py-1 px-3 hover:bg-red-500'>Logout</button>
+        <button className='rounded-full bg-[#3dafaa] text-white py-1 px-3 hover:bg-red-500'
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </ul>
     </nav>
   );

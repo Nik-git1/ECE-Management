@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { ClipLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -10,7 +9,6 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
   const host = "http://localhost:3000";
-  const navigate = useNavigate();
 
   const startLoader = () => {
     setLoading(true);
@@ -74,7 +72,8 @@ const ForgotPassword = () => {
     }
   };
 
-  const handleNewPassword = async () => {
+  const handleNewPassword = async (event) => {
+    event.preventDefault();
     try{
         const response = await fetch(`${host}/api/auth/forgotPassword`, {
           method: "POST",
@@ -86,12 +85,12 @@ const ForgotPassword = () => {
   
         const json = await response.json();
         if (json.success) {
-          navigate(`${host}`);
+          window.location.replace("http://localhost:5173");
         } else {
-          alert(json.message);
+          throw new Error(json.message);
         }
       } catch(error){
-        alert(json.message);
+        alert(error.message);
       }
   };
 

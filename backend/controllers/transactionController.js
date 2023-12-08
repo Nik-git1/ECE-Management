@@ -85,7 +85,7 @@ const requestApprovedAndDeclinedMail = asyncHandler(
           </style>
         </head>
         <body>
-          <p>Student:<strong> ${studentName}</strong> ${requestType} request for Equipment:<strong> ${equipmentName}</strong> is being ${mailText} by Admin:<strong> ${adminName}</strong></p>
+          <p>Student:<strong> ${studentName}</strong> ${requestType} request for Equipment:<strong> ${equipmentName}</strong> is being ${mailText} by Admin</p>
         </body>
       </html>
     `;
@@ -103,7 +103,8 @@ const requestApprovedAndDeclinedMail = asyncHandler(
 //create a borrow request
 const createRequest = async (req, res) => {
   try {
-    const {  equipmentId, quantity, daysToUse, lab } = req.body;
+    const {  equipmentId, quantity, daysToUse, lab, adminComments } = req.body;
+    console.log(adminComments);
     const studentId= req.student
     const equipment = await Equipment.findById(equipmentId);
     if (!equipment) {
@@ -130,10 +131,11 @@ const createRequest = async (req, res) => {
       returnDate,
       lab,
       status: "requested",
+      adminComments: adminComments,
     });
     
     await request.save();
-    studentRequestMail("arnavkumarpalia27@gmail.com", student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, quantity, "borrow");
+    studentRequestMail(student.email, student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, quantity, "borrow");
     res.status(201).json(request);
   } catch (error) {
     res
@@ -204,7 +206,7 @@ const acceptRequest = async (req, res) => {
       equipment.quantity -= request.quantity;
 
       await Promise.all([request.save(), equipment.save()]);
-      requestApprovedAndDeclinedMail("arnavkumarpalia27@gmail.com", student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "borrow", "Approval");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "borrow", "Approval");
     }
     else{
       request.status = "completed";
@@ -212,7 +214,7 @@ const acceptRequest = async (req, res) => {
       request.adminComments = remark;
 
       await Promise.all([request.save(), equipment.save()]);
-      requestApprovedAndDeclinedMail("arnavkumarpalia27@gmail.com", student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "return", "Approval");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "return", "Approval");
     }
     res.status(200).json(request);
   } catch (error) {
@@ -242,12 +244,12 @@ const declineRequest = async (req, res) => {
     if(request.status === 'requested'){
       request.status = "declined";
       await request.save();
-      requestApprovedAndDeclinedMail("arnavkumarpalia27@gmail.com", student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "borrow", "Decline");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "borrow", "Decline");
     }
     else{
       request.status = "accepted";
       await request.save();
-      requestApprovedAndDeclinedMail("arnavkumarpalia27@gmail.com", student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "return", "Decline");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "return", "Decline");
       
     }
 
@@ -398,7 +400,7 @@ const createReturnRequest = async (req, res) => {
     await transaction.save(); // Use await directly on the save method
 
     res.status(200).json(transaction);
-    studentRequestMail("arnavkumarpalia27@gmail.com", student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, transaction.quantity, "return");
+    studentRequestMail(student.email, student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, transaction.quantity, "return");
   } catch (error) {
     console.error("Error returning equipment:", error);
     res
