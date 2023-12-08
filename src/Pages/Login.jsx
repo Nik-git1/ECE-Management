@@ -125,7 +125,6 @@ const LoginPage = () => {
     }
   };
   const handleSendOTP = async () => {
-    console.log(email);
     if (email) {
       startLoader();
       const response = await fetch(`${host}/api/auth/sendotp`, {
@@ -151,7 +150,6 @@ const LoginPage = () => {
     }
   };
   const handleVerifyOTP = async () => {
-    console.log(Otp);
     if (email && Otp) {
       const response = await fetch(`${host}/api/auth/verifyOTP`, {
         method: "POST",
@@ -163,7 +161,6 @@ const LoginPage = () => {
 
       const json = await response.json();
       if (json.success) {
-        alert("OTP verified successfully.");
         navigate("/register", { state: { email } }); 
         // Redirect to the appropriate page after OTP verification
       } else {
@@ -301,7 +298,7 @@ const LoginPage = () => {
                 />
               </div>
               <div className="flex justify-between text-gray-600 py-2">
-                <p>Forgot Password?</p>
+                <a href="/forgotpassword">Forgot Password?</a>
               </div>
               <button
                 type="submit"

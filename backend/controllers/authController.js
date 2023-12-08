@@ -224,4 +224,20 @@ const students = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
-module.exports = { studentLogin, adminLogin, addStudent, addAdmin,sendOtp, verifyOtp,students };
+
+const forgotPassword = async(req, res) => {
+  try {
+    const {email , password} = req.body;
+    const student = await Student.findOne({ email });
+    if(!student){
+      return res.status(400).json({ success: false, message: 'No user registed with this Email Id' })
+    }
+    const hashedPassword = await argon2.hash(password);
+    student.password = hashedPassword;
+    await student.save();
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+}
+module.exports = { studentLogin, adminLogin, addStudent, addAdmin,sendOtp, verifyOtp,students, forgotPassword };

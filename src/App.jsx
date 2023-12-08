@@ -7,6 +7,7 @@ import RequestState from "./Context/RequestState";
 import AuthState from "./Context/AuthState";
 import Login from "./Pages/Login"
 import Register from "./Pages/RegisterPage"
+import ForgotPassword from "./Pages/ForgotPassword";
 
 import {
   useLocation,
@@ -41,7 +42,8 @@ const App = () => {
                 path="/student/*"
               />
          <Route element={<Login />} path="/"></Route>
-          <Route element={<Register />} path="/Register"></Route>
+         <Route element={<Register />} path="/Register"></Route>
+         <Route element={<ForgotPassword />} path="/forgotpassword"></Route>
         </Routes>
       </EquipmentState>
     </RequestState>
