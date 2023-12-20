@@ -15,7 +15,7 @@ const AdminDashboard = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/students");
+      const response = await fetch("/api/auth/students");
       const data = await response.json();
 
       if (data.success) {
@@ -34,7 +34,7 @@ const AdminDashboard = () => {
   const disableStudent = async (studentId) => {
     // Implement the logic to disable a student
     // You can send a request to your API endpoint to update the student status
-    // Example: await fetch(`http://localhost:3000/api/students/disable/${studentId}`, { method: 'PUT' });
+    // Example: await fetch(`/api/students/disable/${studentId}`, { method: 'PUT' });
 
     // After disabling the student, you may want to refresh the student list
     fetchStudents();

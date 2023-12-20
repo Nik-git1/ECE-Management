@@ -28,7 +28,7 @@ const StudentEquipment = ({ user }) => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "http://localhost:3000/api/transaction/requests",
+        "/api/transaction/requests",
         {
           method: "POST",
           headers: {
@@ -73,7 +73,7 @@ const StudentEquipment = ({ user }) => {
   const fetchEquipmentData = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/equipment/equipments"
+        "/api/equipment/equipments"
       );
       const data = await response.json();
       setEquipmentData(data);

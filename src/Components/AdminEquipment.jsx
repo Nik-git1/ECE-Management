@@ -24,7 +24,7 @@ const EquipmentTable = ({user}) => {
     
     try {
 
-      const response = await fetch(`http://localhost:3000/api/equipment/equipments/${user.lab}`);
+      const response = await fetch(`/api/equipment/equipments/${user.lab}`);
       const data = await response.json();
       setEquipmentData(data);
       setLoading(false);
@@ -44,7 +44,7 @@ const EquipmentTable = ({user}) => {
     const token = localStorage.getItem("token")
     try {
       const selectedEquipment = equipmentData[rowIndex];
-      const response = await fetch(`http://localhost:3000/api/equipment/equipments/${selectedEquipment._id}`, {
+      const response = await fetch(`/api/equipment/equipments/${selectedEquipment._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const EquipmentTable = ({user}) => {
     
     const token = localStorage.getItem("token")
     const selectedEquipment = equipmentData[rowIndex];
-    const response = await fetch(`http://localhost:3000/api/equipment/equipments/${selectedEquipment._id}`, {
+    const response = await fetch(`/api/equipment/equipments/${selectedEquipment._id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -175,7 +175,7 @@ const EquipmentTable = ({user}) => {
     const token = localStorage.getItem("token")
 
       // Send a POST request to the backend to add new equipment
-      const response = await fetch('http://localhost:3000/api/equipment/equipments', {
+      const response = await fetch('/api/equipment/equipments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

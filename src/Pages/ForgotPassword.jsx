@@ -8,7 +8,7 @@ const ForgotPassword = () => {
   const [Otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
-  const host = "http://localhost:3000";
+  const host = "";
 
   const startLoader = () => {
     setLoading(true);
@@ -85,7 +85,7 @@ const ForgotPassword = () => {
   
         const json = await response.json();
         if (json.success) {
-          window.location.replace("http://localhost:5173");
+          window.location.replace("http://192.168.3.169/");
         } else {
           throw new Error(json.message);
         }

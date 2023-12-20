@@ -25,7 +25,7 @@ const AdminBorrowRequest = ({ user }) => {
     const status = "requested";
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/requests/${status}/${user.lab}`
+        `/api/transaction/requests/${status}/${user.lab}`
       );
       const data = await response.json();
       console.log(data);
@@ -62,6 +62,7 @@ const AdminBorrowRequest = ({ user }) => {
       confirmButtonText: "Accept",
     }).then((result) => {
       if (result.isConfirmed) {
+        setLoading(true);
         acceptRequest(requestID);
       }
     });
@@ -70,7 +71,7 @@ const AdminBorrowRequest = ({ user }) => {
   const acceptRequest = async (requestID) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/accept/${requestID}`,
+        `/api/transaction/accept/${requestID}`,
         {
           method: "PUT",
         }
@@ -91,7 +92,7 @@ const AdminBorrowRequest = ({ user }) => {
   const declineRequest = async (requestID) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/decline/${requestID}`,
+        `/api/transaction/decline/${requestID}`,
         {
           method: "PUT",
         }
@@ -120,6 +121,7 @@ const AdminBorrowRequest = ({ user }) => {
       confirmButtonText: "Decline The Request",
     }).then((result) => {
       if (result.isConfirmed) {
+        setLoading(true);
         declineRequest(requestID);
       }
     });

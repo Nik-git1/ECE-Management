@@ -19,7 +19,7 @@ const StudentDashBoard = ({ user }) => {
     const token= localStorage.getItem("token")
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
+        `/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
         {
           method: "GET",
           headers: {
@@ -56,9 +56,9 @@ const StudentDashBoard = ({ user }) => {
   const sendReturnRequest = async (transactionId) => {
     const token = localStorage.getItem("token")
     try {
-      setReturnButtonLoader(true);
+      setLoading(true);
       const response = await fetch(
-        "http://localhost:3000/api/transaction/return",
+        "/api/transaction/return",
         {
           method: "POST",
           headers: {
@@ -78,9 +78,7 @@ const StudentDashBoard = ({ user }) => {
         throw new Error(errorData.error);
       }
       fetchRequestData();
-      setTimeout(() => {
-        setReturnButtonLoader(false);
-      }, 1500);
+      setLoading(false);
     } catch (error) {
       console.error("Error sending request:", error.message);
       // Handle the error, show a notification, or take other actions as needed
@@ -93,7 +91,7 @@ const StudentDashBoard = ({ user }) => {
     const token = localStorage.getItem("token")
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
+        `/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
         {
           method: "GET",
           headers: {
@@ -151,7 +149,7 @@ const StudentDashBoard = ({ user }) => {
 
   const renderEquipedRow = (data, index) => {
     const { equipment, request } = data;
-    const formattedReturnedOn = new Date(request.returnedOn).toLocaleDateString(
+    const formattedReturnedOn = new Date(request.returnDate).toLocaleDateString(
       "en-GB",
       {
         day: "2-digit",

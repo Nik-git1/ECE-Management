@@ -1,6 +1,7 @@
 const Transaction = require("../models/Transaction");
 const Equipment = require("../models/Equipment");
 const Student = require("../models/Student");
+const Admin = require('../models/Admin');
 const asyncHandler = require("express-async-handler");
 const nodemailer = require( 'nodemailer' );
 
@@ -85,7 +86,7 @@ const requestApprovedAndDeclinedMail = asyncHandler(
           </style>
         </head>
         <body>
-          <p>Student:<strong> ${studentName}</strong> ${requestType} request for Equipment:<strong> ${equipmentName}</strong> is being ${mailText} by Admin</p>
+          <p>Student:<strong> ${studentName}</strong> ${requestType} request for Equipment:<strong> ${equipmentName}</strong> is being ${mailText} by the Admin</p>
         </body>
       </html>
     `;
@@ -106,7 +107,9 @@ const createRequest = async (req, res) => {
     const {  equipmentId, quantity, daysToUse, lab, adminComments } = req.body;
     console.log(adminComments);
     const studentId= req.student
+    console.log("Student: ",studentId);
     const equipment = await Equipment.findById(equipmentId);
+    const admin = await Admin.findOne({lab});
     if (!equipment) {
       return res.status(400).json({ error: "Equipment not found" });
     }
@@ -135,7 +138,8 @@ const createRequest = async (req, res) => {
     });
     
     await request.save();
-    studentRequestMail(student.email, student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, quantity, "borrow");
+    console.log("sending email to", student.email)
+    studentRequestMail(student.email, student.fullName, student.rollNumber, student.contactNumber, admin.email, equipment.name, quantity, "borrow");
     res.status(201).json(request);
   } catch (error) {
     res
@@ -190,7 +194,8 @@ const acceptRequest = async (req, res) => {
     const request = await Transaction.findById(transactionId);
     const student = await Student.findById(request.student);
     const equipment = await Equipment.findById(request.equipment);
-  
+    const lab = request.lab;
+    const admin = await Admin.findOne({lab});
     if (!request) {
       return res.status(400).json({ error: "Request not found" });
     }
@@ -206,7 +211,7 @@ const acceptRequest = async (req, res) => {
       equipment.quantity -= request.quantity;
 
       await Promise.all([request.save(), equipment.save()]);
-      requestApprovedAndDeclinedMail(student.email, student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "borrow", "Approval");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, admin.email, "Arnav", equipment.name, request.quantity, "borrow", "Approval");
     }
     else{
       request.status = "completed";
@@ -214,7 +219,7 @@ const acceptRequest = async (req, res) => {
       request.adminComments = remark;
 
       await Promise.all([request.save(), equipment.save()]);
-      requestApprovedAndDeclinedMail(student.email, student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "return", "Approval");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, admin.email, "Arnav", equipment.name, request.quantity, "return", "Approval");
     }
     res.status(200).json(request);
   } catch (error) {
@@ -232,6 +237,8 @@ const declineRequest = async (req, res) => {
     const request = await Transaction.findById(transactionId);
     const student = await Student.findById(request.student);
     const equipment = await Equipment.findById(request.equipment);
+    const lab = request.lab;
+    const admin = await Admin.findOne({lab:lab});
     if (!request) {
       return res.status(400).json({ error: "Request not found" });
     }
@@ -244,12 +251,12 @@ const declineRequest = async (req, res) => {
     if(request.status === 'requested'){
       request.status = "declined";
       await request.save();
-      requestApprovedAndDeclinedMail(student.email, student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "borrow", "Decline");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, admin.email, "Arnav", equipment.name, request.quantity, "borrow", "Decline");
     }
     else{
       request.status = "accepted";
       await request.save();
-      requestApprovedAndDeclinedMail(student.email, student.fullName, "arnavkumarpalia@gmail.com", "Arnav", equipment.name, request.quantity, "return", "Decline");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, admin.email, "Arnav", equipment.name, request.quantity, "return", "Decline");
       
     }
 
@@ -382,6 +389,7 @@ const createReturnRequest = async (req, res) => {
 
     const transaction = await Transaction.findById(transactionId);
     const equipment = await Equipment.findById(transaction.equipment);
+    const admin = await Admin.findOne({lab: transaction.lab});
     if (!transaction) {
       return res.status(400).json({ error: "Transaction not found" });
     }
@@ -400,7 +408,7 @@ const createReturnRequest = async (req, res) => {
     await transaction.save(); // Use await directly on the save method
 
     res.status(200).json(transaction);
-    studentRequestMail(student.email, student.fullName, student.rollNumber, student.contactNumber, "arnavkumarpalia@gmail.com", equipment.name, transaction.quantity, "return");
+    studentRequestMail(student.email, student.fullName, student.rollNumber, student.contactNumber, admin.email, equipment.name, transaction.quantity, "return");
   } catch (error) {
     console.error("Error returning equipment:", error);
     res

@@ -20,7 +20,7 @@ const StudentBorrowRequest = ({ user }) => {
    const token = localStorage.getItem("token")
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/requests/delete`,
+        `/api/transaction/requests/delete`,
         {
           method: "DELETE",
           headers: {
@@ -53,7 +53,7 @@ const StudentBorrowRequest = ({ user }) => {
     const token = localStorage.getItem("token")
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/srequests/${user.id}?status=${status}`,
+        `/api/transaction/srequests/${user.id}?status=${status}`,
         {
           method: "GET",
           headers: {
@@ -109,7 +109,7 @@ const StudentBorrowRequest = ({ user }) => {
 
   const renderRow = (data, index) => {
     const { equipment, request } = data;
-    const formattedReturnedOn = new Date(request.returnedOn).toLocaleDateString(
+    const formattedReturnDate = new Date(request.returnDate).toLocaleDateString(
       "en-GB",
       {
         day: "2-digit",
@@ -118,7 +118,7 @@ const StudentBorrowRequest = ({ user }) => {
       }
     );
 
-    const formattedReturnedOnstart = new Date(
+    const formattedStartDate = new Date(
       request.startDate
     ).toLocaleDateString("en-GB", {
       day: "2-digit",
@@ -141,8 +141,8 @@ const StudentBorrowRequest = ({ user }) => {
         <td className="border p-2">{equipment.name}</td>
         <td className="border p-2">{request.lab}</td>
         <td className="border p-2">{request.quantity}</td>
-        <td className="border p-2">{formattedReturnedOnstart}</td>
-        <td className="border p-2">{formattedReturnedOn}</td>
+        <td className="border p-2">{formattedStartDate}</td>
+        <td className="border p-2">{formattedReturnDate}</td>
         <td className={`border p-2 ${textColor}`}>{request.status}</td>
         <td className="border p-2">
           <div className="flex items-center justify-center">

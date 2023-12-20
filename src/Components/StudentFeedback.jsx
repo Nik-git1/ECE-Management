@@ -1,44 +1,65 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const FeedbackForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    quantity: '',
-    reason: '',
-    link: '',
+    'Equipment Name': '',
+    'Quantity': '',
+    'Reason': '',
+    'Link': '',
   });
   const [isFormValid, setIsFormValid] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-    });
-
-    // Check if the form is valid
-    setIsFormValid(formData.name && formData.quantity && formData.reason);
+    }));
+  
+    // Check if the form is valid using the latest state
+    setIsFormValid(formData['Equipment Name'] && formData['Quantity'] && formData['Reason'].trim() !== '');
   };
+  
+  
 
   const handleQuantityChange = (e) => {
     const numericValue = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
     setFormData({
       ...formData,
-      quantity: numericValue,
+      'Quantity': numericValue,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here, e.g., send the data to an API
-    // You can access the form data via formData object
+
+    console.log(formData);
+
+    try {
+      // Make a POST request to the sheet.best API endpoint
+      const response = await axios.post(
+        'https://sheet.best/api/sheets/f97d2c9a-34ee-4a81-a148-3632569b4da3',
+        formData
+      );
+
+      // Check the response status
+      if (response.status === 200) {
+        alert('Form submitted successfully!');
+      } else {
+        alert('Oops, something went wrong. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Oops, something went wrong. Please try again.');
+    }
 
     // Reset the form after submission
     setFormData({
-      name: '',
-      quantity: '',
-      reason: '',
-      link: '',
+      'Equipment Name': '',
+      'Quantity': '',
+      'Reason': '',
+      'Link': '',
     });
   };
 
@@ -49,8 +70,8 @@ const FeedbackForm = () => {
           <label className="block text-gray-700">Name of Equipment</label>
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="Equipment Name"
+            value={formData['Equipment Name']}
             onChange={handleInputChange}
             className="w-full p-2 border rounded"
           />
@@ -59,8 +80,8 @@ const FeedbackForm = () => {
           <label className="block text-gray-700">Quantity</label>
           <input
             type="text"
-            name="quantity"
-            value={formData.quantity}
+            name="Quantity"
+            value={formData['Quantity']}
             onChange={handleQuantityChange}
             className="w-full p-2 border rounded"
           />
@@ -68,8 +89,8 @@ const FeedbackForm = () => {
         <div>
           <label className="block text-gray-700">Specify use-case of the Equipment</label>
           <textarea
-            name="reason"
-            value={formData.reason}
+            name="Reason"
+            value={formData['Reason']}
             onChange={handleInputChange}
             className="w-full p-2 border rounded"
           />
@@ -78,8 +99,8 @@ const FeedbackForm = () => {
           <label className="block text-gray-700">Link to the equipment (optional)</label>
           <input
             type="text"
-            name="link"
-            value={formData.link}
+            name="Link"
+            value={formData['Link']}
             onChange={handleInputChange}
             className="w-full p-2 border rounded"
           />
