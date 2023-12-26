@@ -20,7 +20,7 @@ const StudentBorrowRequest = ({ user }) => {
    const token = localStorage.getItem("token")
     try {
       const response = await fetch(
-        `/api/transaction/requests/delete`,
+        `http://localhost:3000/api/transaction/requests/delete`,
         {
           method: "DELETE",
           headers: {
@@ -53,7 +53,7 @@ const StudentBorrowRequest = ({ user }) => {
     const token = localStorage.getItem("token")
     try {
       const response = await fetch(
-        `/api/transaction/srequests/${user.id}?status=${status}`,
+        `http://localhost:3000/api/transaction/srequests/${user.id}?status=${status}`,
         {
           method: "GET",
           headers: {

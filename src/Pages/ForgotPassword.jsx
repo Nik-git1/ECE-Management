@@ -8,7 +8,7 @@ const ForgotPassword = () => {
   const [Otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
-  const host = "";
+  const host = "http://localhost:3000";
 
   const startLoader = () => {
     setLoading(true);

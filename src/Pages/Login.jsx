@@ -13,7 +13,7 @@ const LoginPage = () => {
   const [OtpSent, setOtpSent] = useState(false);
   const [Otp, setOtp] = useState("");
   const navigate = useNavigate();
-  const host = "";
+  const host = "http://localhost:3000";
   const {login} = useContext(AuthContext);
   const [loading, setLoading] = useState();
 

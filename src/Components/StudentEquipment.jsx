@@ -28,7 +28,7 @@ const StudentEquipment = ({ user }) => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "/api/transaction/requests",
+        "http://localhost:3000/api/transaction/requests",
         {
           method: "POST",
           headers: {
@@ -73,7 +73,7 @@ const StudentEquipment = ({ user }) => {
   const fetchEquipmentData = async () => {
     try {
       const response = await fetch(
-        "/api/equipment/equipments"
+        "http://localhost:3000/api/equipment/equipments"
       );
       const data = await response.json();
       setEquipmentData(data);
@@ -218,6 +218,14 @@ const StudentEquipment = ({ user }) => {
               </label>
             ))}
           </div>
+
+          <button
+            onClick={() => setShowFilterModal(false)}
+            className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+          >
+            Apply Filters
+          </button>
+          
         </div>
       </Modal>
       {loading ? (

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
+import Swal from "sweetalert2";
 
 const AdminDashboard = () => {
   const [students, setStudents] = useState([]);
@@ -15,7 +16,7 @@ const AdminDashboard = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch("/api/auth/students");
+      const response = await fetch("http://localhost:3000/api/auth/students");
       const data = await response.json();
 
       if (data.success) {
@@ -31,12 +32,21 @@ const AdminDashboard = () => {
     }
   };
 
-  const disableStudent = async (studentId) => {
-    // Implement the logic to disable a student
-    // You can send a request to your API endpoint to update the student status
-    // Example: await fetch(`/api/students/disable/${studentId}`, { method: 'PUT' });
+  const disableStudent = async (studentId, studentEmail) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You want to clear dues of ${studentEmail} ?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Clear Dues",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Example: await fetch(`http://localhost:3000/api/students/disable/${studentId}`, { method: 'PUT' });    
+      }
+    });
 
-    // After disabling the student, you may want to refresh the student list
     fetchStudents();
   };
 
@@ -84,7 +94,7 @@ const AdminDashboard = () => {
           <td className="border p-2 text-center">
             <button
               className="bg-red-500 text-white px-2 py-1 rounded-md items-center"
-              onClick={() => disableStudent(student._id)}
+              onClick={() => disableStudent(student._id,student.email)}
             >
               Clear Dues
             </button>

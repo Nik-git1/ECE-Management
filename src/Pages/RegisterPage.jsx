@@ -36,7 +36,7 @@ const Register = () => {
                 alert("Please in fill all fields");
                 return;
             }
-            const response = await fetch('/api/auth/addStudent', {
+            const response = await fetch('http://localhost:3000/api/auth/addStudent', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

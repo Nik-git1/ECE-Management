@@ -29,7 +29,7 @@ const AdminReturnRequest = ({ user }) => {
   const fetchRequests = async () => {
     try {
       const response = await fetch(
-        `/api/transaction/requests/${selectedStatus}/${user.lab}`
+        `http://localhost:3000/api/transaction/requests/${selectedStatus}/${user.lab}`
       );
       const data = await response.json();
 
@@ -84,7 +84,7 @@ const AdminReturnRequest = ({ user }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `/api/transaction/accept/${requestID}`,
+        `http://localhost:3000/api/transaction/accept/${requestID}`,
         {
           method: "PUT",
           headers: {
@@ -110,7 +110,7 @@ const AdminReturnRequest = ({ user }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `/api/transaction/decline/${requestID}`,
+        `http://localhost:3000/api/transaction/decline/${requestID}`,
         {
           method: "PUT",
         }

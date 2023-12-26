@@ -25,7 +25,7 @@ const AdminBorrowRequest = ({ user }) => {
     const status = "requested";
     try {
       const response = await fetch(
-        `/api/transaction/requests/${status}/${user.lab}`
+        `http://localhost:3000/api/transaction/requests/${status}/${user.lab}`
       );
       const data = await response.json();
       console.log(data);
@@ -71,7 +71,7 @@ const AdminBorrowRequest = ({ user }) => {
   const acceptRequest = async (requestID) => {
     try {
       const response = await fetch(
-        `/api/transaction/accept/${requestID}`,
+        `http://localhost:3000/api/transaction/accept/${requestID}`,
         {
           method: "PUT",
         }
@@ -92,7 +92,7 @@ const AdminBorrowRequest = ({ user }) => {
   const declineRequest = async (requestID) => {
     try {
       const response = await fetch(
-        `/api/transaction/decline/${requestID}`,
+        `http://localhost:3000/api/transaction/decline/${requestID}`,
         {
           method: "PUT",
         }

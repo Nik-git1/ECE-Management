@@ -19,7 +19,7 @@ const StudentDashBoard = ({ user }) => {
     const token= localStorage.getItem("token")
     try {
       const response = await fetch(
-        `/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
+        `http://localhost:3000/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
         {
           method: "GET",
           headers: {
@@ -58,7 +58,7 @@ const StudentDashBoard = ({ user }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        "/api/transaction/return",
+        "http://localhost:3000/api/transaction/return",
         {
           method: "POST",
           headers: {
@@ -91,7 +91,7 @@ const StudentDashBoard = ({ user }) => {
     const token = localStorage.getItem("token")
     try {
       const response = await fetch(
-        `/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
+        `http://localhost:3000/api/transaction/srequests/${user.id}?status=${statusQueryParam}`,
         {
           method: "GET",
           headers: {
