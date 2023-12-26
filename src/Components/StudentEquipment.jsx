@@ -166,6 +166,7 @@ const StudentEquipment = ({ user }) => {
           <label className="block mb-0 mr-2">Search:</label>
           <input
             type="text"
+            placeholder='Search Equipment...'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full p-2 border rounded"

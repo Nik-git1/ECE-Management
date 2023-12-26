@@ -331,22 +331,33 @@ const EquipmentTable = ({user}) => {
     // <div className=''>
       <div className=''>
       <div >
-      <div className="flex items-center  my-2">
-        <div className="flex items-center">
-          <label className="block mb-0 mr-2">Search:</label>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-2 border rounded"
-          />
+      <div className="flex justify-between my-2">
+        <div className='flex'>
+          <div className="flex items-center">
+            <label className="block mb-0 mr-2">Search:</label>
+            <input
+              type="text"
+              placeholder='Search Equipment...'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <button
+            onClick={openFilterModal}
+            className="bg-gray-300 text-gray-600 px-16 py-2 rounded ml-2"
+          >
+            Filter
+          </button>
         </div>
-        <button
-          onClick={openFilterModal}
-          className="bg-gray-300 text-gray-600 px-16 py-2 rounded ml-2"
-        >
-          Filter
-        </button>
+        <div className='flex justify-end mr-6'>
+          <button
+            className='rounded-full bg-[#3dafaa] text-white border-2 border-[#3dafaa] py-1 px-3 mt-2 mb-1 mr-1 hover:bg-white hover:text-[#3dafaa]'
+            onClick={handleAddEquipment}
+          >
+            Add Equipment
+          </button>
+        </div>
       </div>
       <Modal
   isOpen={showFilterModal}
@@ -412,15 +423,8 @@ const EquipmentTable = ({user}) => {
         </div>
       ) : (
         <>
-          <div className='flex justify-end'>
-            <button
-              className='rounded-full bg-[#3dafaa] text-white border-2 border-[#3dafaa] py-1 px-3 mt-2 mb-1 mr-1 hover:bg-white hover:text-[#3dafaa]'
-              onClick={handleAddEquipment}
-            >
-              Add Equipment
-            </button>
-          </div>
-          <div className='overflow-auto max-w-[82vw] max-h-[75vh]'>
+          
+          <div className='overflow-auto max-w-[82vw] max-h-[80vh]'>
             <table className='w-full border-collapse border'>
               <thead className='sticky top-0'>{renderHeaderRow()}</thead>
               <tbody>

@@ -5,6 +5,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 const AdminBorrowRequest = ({ user }) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const columnNames = [
     "S.No",
     "Equipment Name",
@@ -100,8 +101,33 @@ const AdminBorrowRequest = ({ user }) => {
     );
   };
 
+  const filteredRequests = requests.filter((requestData) => {
+    const { equipment, student, request } = requestData;
+    const searchString = searchTerm.toLowerCase();
+  
+    return (
+      equipment?.name.toLowerCase().includes(searchString) ||
+      student?.email.toLowerCase().includes(searchString) ||
+      student?.contactNumber.toLowerCase().includes(searchString) ||
+      request?.startDate.includes(searchString) ||
+      request?.quantity.includes(searchString) ||
+      request?.returnDate.includes(searchString)
+    );
+  });
+  
+
   return (
     <div>
+      <div className="flex items-center mt-2">
+        <label className="block mb-0 mr-2">Search:</label>
+        <input
+          type="text"
+          placeholder='Search Student...'
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="p-2 border rounded"
+        />
+      </div>
       {loading ? (
         <div className="flex justify-center">
           <ClipLoader
@@ -113,11 +139,11 @@ const AdminBorrowRequest = ({ user }) => {
           />
         </div>
       ):(
-      <div className='overflow-auto max-w-[82vw] max-h-[82vh] mt-4'>
+      <div className='overflow-auto max-w-[82vw] max-h-[82vh] mt-2'>
         <table className='w-full border-collapse border'>
           <thead className='sticky top-0'>{renderHeader()}</thead>
           <tbody>
-            {requests.map((requestData, index) => renderRow(requestData, index))}
+            {filteredRequests.map((requestData, index) => renderRow(requestData, index))}
           </tbody>
         </table>
       </div>
