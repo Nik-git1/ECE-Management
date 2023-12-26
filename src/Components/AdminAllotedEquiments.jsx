@@ -10,6 +10,7 @@ const AdminBorrowRequest = ({ user }) => {
     "S.No",
     "Equipment Name",
     "Student Email ID",
+    "Roll No.",
     "Contact",
     "Request Date",
     "Quantity",
@@ -92,6 +93,7 @@ const AdminBorrowRequest = ({ user }) => {
         <td className="border p-2 text-center">{index + 1}</td>
         <td className="border p-2 text-center">{equipment?.name}</td>
         <td className="border p-2 text-center">{student?.email}</td>
+        <td className="border p-2 text-center">{student?.rollNumber}</td>
         <td className="border p-2 text-center">{student?.contactNumber}</td>
         <td className="border p-2 text-center">{formattedStartDate}</td>
         <td className="border p-2 text-center">{request?.quantity}</td>
@@ -108,13 +110,14 @@ const AdminBorrowRequest = ({ user }) => {
     return (
       equipment?.name.toLowerCase().includes(searchString) ||
       student?.email.toLowerCase().includes(searchString) ||
+      student?.rollNumber.toLowerCase().includes(searchString) ||
       student?.contactNumber.toLowerCase().includes(searchString) ||
-      request?.startDate.includes(searchString) ||
-      request?.quantity.includes(searchString) ||
-      request?.returnDate.includes(searchString)
+      (request?.startDate && request?.startDate.includes(searchString)) ||
+      ((request?.quantity || '').toString().includes(searchString)) ||
+      (request?.returnDate && request?.returnDate.includes(searchString))
     );
   });
-  
+ 
 
   return (
     <div>

@@ -17,6 +17,7 @@
     "jest": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.6.3",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.7",
     "otp-generator": "^4.0.1",
     "otp-genrator": "^1.0.1"

@@ -4,6 +4,7 @@ const Student = require("../models/Student");
 const Admin = require('../models/Admin');
 const asyncHandler = require("express-async-handler");
 const nodemailer = require( 'nodemailer' );
+const cron = require('node-cron');
 
 
 const transporter = nodemailer.createTransport({
@@ -13,6 +14,34 @@ const transporter = nodemailer.createTransport({
     pass: "meatiiitdelhi@123", // use env file for this data , also kuch settings account ki change krni padti vo krliyo
   },
 });
+
+const sendReturnReminderEmail = async (studentEmail, studentName, equipmentName, quantity, date) => {
+  const subject = 'Return Reminder';
+  const htmlContent = `
+    <html>
+      <head>
+        <style>
+          /* Add your styles here */
+        </style>
+      </head>
+      <body>
+        <p>Dear ${studentName},</p>
+        <p>This is a reminder to return the equipment ${equipmentName} (${quantity} units).</p>
+        <p>Due date: ${date}</p>
+        <p>Thank you!</p>
+      </body>
+    </html>
+  `;
+  
+  const mailOptions = {
+    from: 'arnav20363@iiitd.ac.in',
+    to: studentEmail,
+    subject: subject,
+    html: htmlContent,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
 
 // Send email for student request to admin
 const studentRequestMail = asyncHandler(
@@ -416,6 +445,73 @@ const createReturnRequest = async (req, res) => {
       .json({ error: "An error occurred while returning the equipment" });
   }
 };
+
+// Schedule a cron job to run at 11:59 pm every day
+cron.schedule('59 23 * * *', async () => {
+  try {
+    const currentDate = new Date();
+    const formattedCurrentDate = currentDate.toISOString().split('T')[0];
+
+    // Find transactions with returnDate matching the current date
+    const currentDayTransactions = await Transaction.find({
+      returnDate: { $gte: formattedCurrentDate, $lt: new Date(formattedCurrentDate + 'T23:59:59.999Z') },
+      returnedOn: null
+    });
+
+    // Send return reminder emails to the students for the current day
+    for (const transaction of currentDayTransactions) {
+      const student = await Student.findById(transaction.student);
+      const equipment = await Equipment.findById(transaction.equipment);
+      if (student) {
+        console.log(`Sending return reminder email to ${student.email}`);
+        sendReturnReminderEmail(student.email, student.fullName, equipment.name, transaction.quantity, formattedCurrentDate);
+      }
+    }
+
+    // Calculate one day before
+    const beforeDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    // Find transactions with returnDate matching one day before
+    const oneDayBeforeTransactions = await Transaction.find({
+      returnDate: { $gte: beforeDate, $lt: new Date(beforeDate + 'T23:59:59.999Z') },
+      returnedOn: null
+    });
+
+    // Send return reminder emails to the students for one day before
+    for (const transaction of oneDayBeforeTransactions) {
+      const student = await Student.findById(transaction.student);
+      const equipment = await Equipment.findById(transaction.equipment);
+      if (student) {
+        console.log(`Sending return reminder email to ${student.email}`);
+        sendReturnReminderEmail(student.email, student.fullName, equipment.name, transaction.quantity, beforeDate);
+      }
+    }
+
+    // Calculate one day after
+    const afterDate = new Date(currentDate);
+    afterDate.setDate(afterDate.getDate() - 1);
+    const formattedAfterDate = afterDate.toISOString().split('T')[0];
+
+    // Find transactions with returnDate matching one day after
+    const oneDayAfterTransactions = await Transaction.find({
+      returnDate: { $gte: formattedAfterDate, $lt: new Date(formattedAfterDate + 'T23:59:59.999Z') },
+      returnedOn: null
+    });
+
+    // Send return reminder emails to the students for one day after
+    for (const transaction of oneDayAfterTransactions) {
+      const student = await Student.findById(transaction.student);
+      const equipment = await Equipment.findById(transaction.equipment);
+      if (student) {
+        console.log(`Sending return reminder email to ${student.email}`);
+        sendReturnReminderEmail(student.email, student.fullName, equipment.name, transaction.quantity, formattedAfterDate);
+      }
+    }
+  } catch (error) {
+    console.error('Error while sending return reminder emails:', error);
+  }
+});
+
 
 module.exports = {
   createRequest,
