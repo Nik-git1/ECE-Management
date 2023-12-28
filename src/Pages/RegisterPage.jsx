@@ -55,7 +55,7 @@ const Register = () => {
                 setLoading(false);
                 Swal.fire('Submitted!', 'You have sucessfully registered to the portal.', 'success').then((result) => {
                     if (result.isConfirmed) {
-                      window.location.replace("http://localhost:5001");
+                      window.location.replace("http://localhost:5173");
                     }
                   });
             }

@@ -15,7 +15,7 @@ const AdminNavbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.replace("http://192.168.3.169/");
+    window.location.replace("http://localhost:5173");
   };
 
   return (

@@ -74,7 +74,7 @@ const LoginPage = () => {
         login(userData);
         navigate('/admin');
       } else {
-        alert('Invalid Credentials');
+        alert(json.message);
       }
     } else {
       alert("Please fill in both email and password fields.");
@@ -109,7 +109,7 @@ const LoginPage = () => {
         login(userData);
         navigate('/student');
       } else {
-        alert('Invalid Credentials');
+        alert(json.message);
       }
     } else {
       alert("Please fill in both email and password fields.");

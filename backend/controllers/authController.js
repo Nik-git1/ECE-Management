@@ -28,7 +28,7 @@ const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
     user: 'arnav20363@iiitd.ac.in',
-    pass: 'meatiiitdelhi@123', // use env file for this data , also kuch settings account ki change krni padti vo krliyo
+    pass: 'zcqk zhpg wjkf xwxq', // use env file for this data , also kuch settings account ki change krni padti vo krliyo
   },
 });
 
@@ -136,12 +136,17 @@ const studentLogin = async (req, res) => {
   const student = await Student.findOne({ email });
 
   if (!student) {
-    return res.status(401).json({ message: 'Student not found' });
+    return res.status(401).json({ success: false, message: 'Invalid credentials' });
+  }
+
+   // Check if clearDues is false for the student
+   if (student.clearDues) {
+    return res.status(401).json({ success: false, message: 'You account has been terminated by Admin' });
   }
 
   const validPassword = await argon2.verify(student.password, password);
   if (!validPassword) {
-    return res.status(401).json({ message: 'Invalid password' });
+    return res.status(401).json({ success: false, message: 'Invalid credentials' });
   }
 
   const tokenPayload = {
@@ -163,12 +168,12 @@ const adminLogin = async (req, res) => {
   const admin = await Admin.findOne({ email });
 
   if (!admin) {
-    return res.status(401).json({ message: 'Admin not found' });
+    return res.status(401).json({ success: false, message: 'Invalid credentials' });
   }
 
   const validPassword = await argon2.verify(admin.password, password);
   if (!validPassword) {
-    return res.status(401).json({ message: 'Invalid password' });
+    return res.status(401).json({ success: false, message: 'Invalid credentials' });
   }
 
   const tokenPayload = {
@@ -212,10 +217,9 @@ const addAdmin = async (req, res) => {
 };
 
 const students = async (req, res) => {
-  console.log("req")
   try {
     // Fetch all students from the database
-    const students = await Student.find({}, '-password'); // Exclude the password field from the response
+    const students = await Student.find({ clearDues: false }, '-password'); // Exclude the password field from the response
 
     // Send the list of students in the response
     res.status(200).json({ success: true, students });
@@ -240,4 +244,26 @@ const forgotPassword = async(req, res) => {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 }
-module.exports = { studentLogin, adminLogin, addStudent, addAdmin,sendOtp, verifyOtp,students, forgotPassword };
+
+
+const disableStudent = async (req, res) => {
+  try {
+    const { studentID } = req.body;
+    const student = await Student.findById(studentID);
+
+    if (!student) {
+      return res.status(400).json({ success: false, message: 'No user registered with this Student ID' });
+    }
+
+    student.clearDues = true;
+    await student.save();
+
+    res.status(200).json({ success: true, message: 'Dues cleared successfully' });
+  } catch (error) {
+    console.error('Error clearing dues:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+
+module.exports = { studentLogin, adminLogin, addStudent, addAdmin,sendOtp, verifyOtp,students, forgotPassword, disableStudent};

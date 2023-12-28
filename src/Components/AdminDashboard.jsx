@@ -41,9 +41,14 @@ const AdminDashboard = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Clear Dues",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        // Example: await fetch(`http://localhost:3000/api/students/disable/${studentId}`, { method: 'PUT' });    
+        const response = await fetch(`http://localhost:3000/api/auth/disableStudent`, { method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ studentID: studentId })});  
+        fetchStudents();  
       }
     });
 

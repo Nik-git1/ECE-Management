@@ -42,6 +42,11 @@ const studentSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  clearDues: {
+    type: Boolean,
+    require: true,
+    default: false
+  }
 });
 
 // Create the student model
