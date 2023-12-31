@@ -205,6 +205,18 @@ const EquipmentTable = ({user}) => {
     setAddingEquipment(false);
   };
 
+  const truncateLink = (link) => {
+    try {
+      const url = new URL(link);
+      const truncatedLink = `${url.protocol}//${url.hostname}${url.pathname.split('/').slice(0, 2).join('/')}`;
+  
+      return truncatedLink;
+    } catch (error) {
+      console.error('Error parsing URL:', error);
+      return link; // Return the original link if there's an error parsing it
+    }
+  };
+
   const renderRow = (equipment, index) => {
     const isEditing = index === editingRow;
     const editingRowClass = 'bg-gray-300';
@@ -250,8 +262,8 @@ const EquipmentTable = ({user}) => {
           {isEditing ? (
             <input value={equipment.link} onChange={(e) => handleFieldChange(e, 'link')} />
           ) : (
-            <a href={equipment.link} target="_blank" rel="noopener noreferrer">
-              {equipment.link}
+            <a href={equipment.link} target="_blank" rel="noopener noreferrer" className='text-blue-500'>
+              {truncateLink(equipment.link)}
             </a>
           )}
         </td>

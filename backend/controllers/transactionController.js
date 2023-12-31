@@ -88,24 +88,19 @@ const studentRequestMail = asyncHandler(
 );
 
 const requestApprovedAndDeclinedMail = asyncHandler(
-  async (studentEmail, studentName, adminEmail, adminName, equipmentName, quantity, requestType, adminresponse) => {
+  async (studentEmail, studentName, studentRollNo, studentContact, adminEmail, equipmentName, quantity, requestType, adminresponse) => {
 
     let AdminResponse = "Approval";
-    let RequestType = "borrow";
-    let mailText = "approved"
-    if (requestType === "borrow") {
-      RequestType = "borrow";
-    } if (requestType === "return") {
-      RequestType = "return";
-    } if (adminresponse === "Approval") {
+    let mailText = "Approved"
+    if (adminresponse === "Approval") {
       AdminResponse = "Approval";
-      mailText = "approved";
+      mailText = "Approved";
     }
     if (adminresponse === "Decline") {
       AdminResponse = "Decline";
-      mailText = "declined";
+      mailText = "Declined";
     }
-    let subject = `${AdminResponse} of ${RequestType} request`;
+    let subject = `${AdminResponse} of ${requestType} request`;
 
     const htmlContent = `
       <html>
@@ -115,7 +110,16 @@ const requestApprovedAndDeclinedMail = asyncHandler(
           </style>
         </head>
         <body>
-          <p>Student:<strong> ${studentName}</strong> ${requestType} request for Equipment:<strong> ${equipmentName}</strong> is being ${mailText} by the Admin</p>
+          <h2>Student:</h2>
+          
+          <p><strong>Email:</strong> ${studentEmail}</p>
+          <p><strong>Name:</strong> ${studentName}</p>
+          <p><strong>Roll No.</strong> ${studentRollNo}</p>
+          <p><strong>Conatact</strong> ${studentContact}</p>
+
+          <h2>${mailText} Requested for:</h2>
+          <p><strong>Equipment:</strong> ${equipmentName}</p>
+          <p><strong>Qunatity:</strong> ${quantity}</p>
         </body>
       </html>
     `;
@@ -133,7 +137,7 @@ const requestApprovedAndDeclinedMail = asyncHandler(
 //create a borrow request
 const createRequest = async (req, res) => {
   try {
-    const {  equipmentId, quantity, daysToUse, lab, adminComments } = req.body;
+    const {  equipmentId, quantity, daysToUse, lab, studentComment } = req.body;
     console.log(adminComments);
     const studentId= req.student
     console.log("Student: ",studentId);
@@ -240,7 +244,7 @@ const acceptRequest = async (req, res) => {
       equipment.quantity -= request.quantity;
 
       await Promise.all([request.save(), equipment.save()]);
-      requestApprovedAndDeclinedMail(student.email, student.fullName, admin.email, "Arnav", equipment.name, request.quantity, "borrow", "Approval");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, student.rollNumber, student.contactNumber, admin.email, equipment.name, request.quantity, "borrow", "Approval");
     }
     else{
       request.status = "completed";
@@ -248,7 +252,7 @@ const acceptRequest = async (req, res) => {
       request.adminComments = remark;
 
       await Promise.all([request.save(), equipment.save()]);
-      requestApprovedAndDeclinedMail(student.email, student.fullName, admin.email, "Arnav", equipment.name, request.quantity, "return", "Approval");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, student.rollNumber, student.contactNumber, admin.email, equipment.name, request.quantity, "return", "Approval");
     }
     res.status(200).json(request);
   } catch (error) {
@@ -280,12 +284,12 @@ const declineRequest = async (req, res) => {
     if(request.status === 'requested'){
       request.status = "declined";
       await request.save();
-      requestApprovedAndDeclinedMail(student.email, student.fullName, admin.email, "Arnav", equipment.name, request.quantity, "borrow", "Decline");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, student.rollNumber, student.contactNumber, admin.email, equipment.name, request.quantity, "borrow", "Decline");
     }
     else{
       request.status = "accepted";
       await request.save();
-      requestApprovedAndDeclinedMail(student.email, student.fullName, admin.email, "Arnav", equipment.name, request.quantity, "return", "Decline");
+      requestApprovedAndDeclinedMail(student.email, student.fullName, student.rollNumber, student.contactNumber, admin.email, equipment.name, request.quantity, "return", "Decline");
       
     }
 
@@ -301,10 +305,13 @@ const declineRequest = async (req, res) => {
 const getAllRequests = async (req, res) => {
   
   const { status,lab } = req.params;
-  const baseQuery = { lab: lab };
+  const baseQuery = {};
   if (status) {
     const statusArray = status.split(","); // Split the comma-separated string into an array
     baseQuery.status = { $in: statusArray }; // Use $in operator to match any of the provided statuses
+  }
+  if (lab != "All"){
+    baseQuery.lab = lab;
   }
   try {
     const Rrequests = await Transaction.find(baseQuery);
@@ -447,7 +454,7 @@ const createReturnRequest = async (req, res) => {
 };
 
 // Schedule a cron job to run at 11:59 pm every day
-cron.schedule('59 23 * * *', async () => {
+cron.schedule('16 11 * * *', async () => {
   try {
     const currentDate = new Date();
     const formattedCurrentDate = currentDate.toISOString().split('T')[0];

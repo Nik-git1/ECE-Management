@@ -44,6 +44,10 @@ const transactionSchema = new mongoose.Schema({
     type: String,
     default: "NA",
   },
+  studentComment: {
+    type: String,
+    default: "NA",
+  }
 });
 
 // Create the transaction (request) model

@@ -40,7 +40,7 @@ const StudentEquipment = ({ user }) => {
             quantity: requestedQuantity,
             daysToUse: requestedDays,
             lab: selectedLab,
-            adminComments: additionInfo,
+            studentComment: additionInfo,
           }),
         }
       );

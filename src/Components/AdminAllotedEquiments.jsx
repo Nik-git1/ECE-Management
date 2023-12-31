@@ -6,26 +6,29 @@ const AdminBorrowRequest = ({ user }) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [lab, setLab] = useState(user.lab);
   const columnNames = [
     "S.No",
     "Equipment Name",
     "Student Email ID",
     "Roll No.",
     "Contact",
-    "Request Date",
     "Quantity",
+    "Additional Info",
+    "Request Date",
     "Expected return Date",
   ];
 
   useEffect(() => {
     setLoading(true); fetchRequests();
-  }, []);
+  }, [lab]);
+
 
   const fetchRequests = async () => {
     const status = ["accepted","returning"];
     try {
       const response = await fetch(
-        `http://localhost:3000/api/transaction/requests/${status}/${user.lab}`
+        `http://localhost:3000/api/transaction/requests/${status}/${lab}`
       );
       const data = await response.json();
 
@@ -95,8 +98,9 @@ const AdminBorrowRequest = ({ user }) => {
         <td className="border p-2 text-center">{student?.email}</td>
         <td className="border p-2 text-center">{student?.rollNumber}</td>
         <td className="border p-2 text-center">{student?.contactNumber}</td>
-        <td className="border p-2 text-center">{formattedStartDate}</td>
         <td className="border p-2 text-center">{request?.quantity}</td>
+        <td className="border p-2 text-center">{request?.studentCommnet}</td>
+        <td className="border p-2 text-center">{formattedStartDate}</td>
         <td className="border p-2 text-center">{formattedreturndate}</td>
         <td className="border p-2"></td>
       </tr>
@@ -121,15 +125,31 @@ const AdminBorrowRequest = ({ user }) => {
 
   return (
     <div>
-      <div className="flex items-center mt-2">
-        <label className="block mb-0 mr-2">Search:</label>
-        <input
-          type="text"
-          placeholder='Search Student...'
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 border rounded"
-        />
+      <div className="flex mt-2">
+        <div className="flex items-center mr-2">
+          <label className="block mb-0 mr-2">Search:</label>
+          <input
+            type="text"
+            placeholder='Search Student...'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="p-2 border rounded"
+          />
+        </div>
+        <div className="flex items-center mt-2">
+          <label className="block mb-0 mr-2">Lab:</label>
+          <select
+            value={lab}
+            onChange={(e) => setLab(e.target.value)}
+            className="p-2 border rounded"
+          >
+            <option value="All">All</option>
+            <option value="lab1">Lab 1</option>
+            <option value="lab2">Lab 2</option>
+            <option value="lab3">Lab 3</option>
+            <option value="lab4">Lab 4</option>
+          </select>
+        </div>
       </div>
       {loading ? (
         <div className="flex justify-center">

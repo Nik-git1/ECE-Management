@@ -16,9 +16,10 @@ const AdminReturnRequest = ({ user }) => {
     "Equipment Name",
     "Student Email ID",
     "Contact",
-    "Request Date",
     "Quantity",
-    "Expected return Date",
+    "Additional Info",
+    "Requested On",
+    "Due Date",
     "Retuned On",
   ];
 
@@ -193,8 +194,9 @@ const AdminReturnRequest = ({ user }) => {
         <td className="border p-2 text-center">{equipment?.name}</td>
         <td className="border p-2 text-center">{student?.email}</td>
         <td className="border p-2 text-center">{student?.contactNumber}</td>
-        <td className="border p-2 text-center">{formattedStartDate}</td>
         <td className="border p-2 text-center">{request?.quantity}</td>
+        <td className="border p-2 text-center">{request?.studentComment}</td>
+        <td className="border p-2 text-center">{formattedStartDate}</td>
         <td className="border p-2 text-center">{formattedreturndate}</td>
         <td className="border p-2 text-center">{formattedReturnedOn}</td>
           {selectedStatus === "returning" ? (

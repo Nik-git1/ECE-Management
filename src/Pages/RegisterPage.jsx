@@ -100,7 +100,7 @@ const Register = () => {
                             name='email'
                             value={email}
                             onChange={handleChange}
-                            className='p-2 border rounded'
+                            className='p-2 border rounded w-[500px]'
                             disabled
                         />
                     </div>
@@ -114,7 +114,7 @@ const Register = () => {
                             name='fullName'
                             value={formData.fullName}
                             onChange={handleChange}
-                            className='p-2 border rounded'
+                            className='p-2 border rounded w-[500px]'
                             required
                         />
                     </div>
@@ -128,7 +128,7 @@ const Register = () => {
                             name='password'
                             value={formData.password}
                             onChange={handleChange}
-                            className='p-2 border rounded'
+                            className='p-2 border rounded w-[500px]'
                             required
                         />
                     </div>
@@ -142,7 +142,7 @@ const Register = () => {
                             name='rollNumber'
                             value={formData.rollNumber}
                             onChange={handleChange}
-                            className='p-2 border rounded'
+                            className='p-2 border rounded w-[500px]'
                             required
                         />
                     </div>
@@ -155,7 +155,7 @@ const Register = () => {
                             name='graduationType'
                             value={formData.graduationType}
                             onChange={handleChange}
-                            className='p-2 border rounded'
+                            className='p-2 border rounded w-[500px]'
                             required
                         >
                             <option value=''>Select Graduation Type</option>
@@ -173,7 +173,7 @@ const Register = () => {
                             name='branch'
                             value={formData.branch}
                             onChange={handleChange}
-                            className='p-2 border rounded'
+                            className='p-2 border rounded w-[500px]'
                             required
                         >
                             <option value=''>Select Branch</option>
@@ -197,7 +197,7 @@ const Register = () => {
                             name='graduationYear'
                             value={formData.graduationYear}
                             onChange={handleChange}
-                            className='p-2 border rounded'
+                            className='p-2 border rounded w-[500px]'
                             required
                         />
                     </div>
@@ -211,7 +211,7 @@ const Register = () => {
                             name='contactNumber'
                             value={formData.contactNumber}
                             onChange={handleChange}
-                            className='p-2 border rounded'
+                            className='p-2 border rounded w-[500px]'
                             required
                         />
                     </div>
