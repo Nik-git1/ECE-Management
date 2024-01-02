@@ -99,7 +99,7 @@ const AdminBorrowRequest = ({ user }) => {
         <td className="border p-2 text-center">{student?.rollNumber}</td>
         <td className="border p-2 text-center">{student?.contactNumber}</td>
         <td className="border p-2 text-center">{request?.quantity}</td>
-        <td className="border p-2 text-center">{request?.studentCommnet}</td>
+        <td className="border p-2 text-center">{request?.studentComment}</td>
         <td className="border p-2 text-center">{formattedStartDate}</td>
         <td className="border p-2 text-center">{formattedreturndate}</td>
         <td className="border p-2"></td>

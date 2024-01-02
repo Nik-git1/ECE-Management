@@ -137,10 +137,8 @@ const requestApprovedAndDeclinedMail = asyncHandler(
 //create a borrow request
 const createRequest = async (req, res) => {
   try {
-    const {  equipmentId, quantity, daysToUse, lab, studentComment } = req.body;
-    console.log(adminComments);
+    const {  equipmentId, quantity, daysToUse, lab, studentComment} = req.body;
     const studentId= req.student
-    console.log("Student: ",studentId);
     const equipment = await Equipment.findById(equipmentId);
     const admin = await Admin.findOne({lab});
     if (!equipment) {
@@ -167,7 +165,7 @@ const createRequest = async (req, res) => {
       returnDate,
       lab,
       status: "requested",
-      adminComments: adminComments,
+      studentComment: studentComment
     });
     
     await request.save();
